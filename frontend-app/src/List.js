@@ -165,7 +165,7 @@ function ListPage() {
           handleNextGroup={handleNextGroup}
           renderPaginationItems={renderPaginationItems}
           setCurrentPage={setCurrentPage}
-          path={['Home']}
+          path={['Home']} 
         >
         <div className="col-md-12">
             <Search onSearch={handleSearch} />
