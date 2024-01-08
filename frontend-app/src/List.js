@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Breadcrumb from './Breadcrumb';
 import { Pagination } from 'react-bootstrap';
+import Layout from './Layout';
 
 const Search = ({ onSearch }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -56,15 +57,13 @@ const DetailsPane = ({ selectedItem, isOpen, onClose }) => {
 function ListPage() {
   const [items, setItems] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(20);
+  const [pageSize, setPageSize] = useState(14);
   const [selectedItem, setSelectedItem] = useState(null);
   const [isDetailsPaneOpen, setIsDetailsPaneOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [totalPages, setTotalPages] = useState(0);
 
   const navigate = useNavigate();
-
-
   const maxPagesToShow = 18;
 
   useEffect(() => {
@@ -159,69 +158,39 @@ function ListPage() {
   };
 
   return (
-    <div className="container mt-5">
-        <Breadcrumb path={['Home']} />
-        <h1 className="mb-4">Offset Projects Registry</h1>
-        <Search onSearch={handleSearch} />
-        <div className="row">
-            <div className="mt-8">
-                <button
-                    className="btn btn-secondary mr-2"
-                    onClick={handlePrevGroup}
-                    disabled={currentPage <= maxPagesToShow}
-                  >
-                    Previous Group
-                  </button>
-                  <button
-                      className="btn btn-secondary"
-                      onClick={handleNextGroup}
-                      disabled={currentPage + maxPagesToShow > totalPages}
-                    >
-                      Next Group
-                    </button>
-            </div>
-            <div className="mt-4">
-
-                <Pagination>
-                    <Pagination.First />
-                    <Pagination.Prev
-                        disabled={currentPage === 1}
-                        onClick={() => setCurrentPage(currentPage - 1)}
-                      />
-
-                    {renderPaginationItems()}
-                <Pagination.Next
-                    disabled={currentPage === totalPages}
-                    onClick={() => setCurrentPage(currentPage + 1)}
-                />
-                <Pagination.Last />
-                </Pagination>
-
-            </div>
-            <div className="col-md-12">
-                <table className="table table-hover">
-                    <thead>
-                      <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {items.map(item => (
-                        <tr
-                          key={item.id}
-                          onClick={() => handleItemClick(item)}
-                          className={selectedItem && selectedItem.id === item.id ? 'table-primary' : ''}
-                        >
-                          <td>{item["Project ID"]}</td>
-                          <td><Link to={`/details/${item.id}`}>{item["Project Name"]}</Link></td>
-                        </tr>
-                      ))}
-                    </tbody>
-                </table>
-            </div>
+     <Layout
+          currentPage={currentPage}
+          totalPages={totalPages}
+          handlePrevGroup={handlePrevGroup}
+          handleNextGroup={handleNextGroup}
+          renderPaginationItems={renderPaginationItems}
+          setCurrentPage={setCurrentPage}
+          path={['Home']}
+        >
+        <div className="col-md-12">
+            <Search onSearch={handleSearch} />
+            <table className="table table-hover" style={{ '--bs-table-bg': '#15302600', '--bs-table-color': 'white'  }}>
+                <thead>
+                 <tr>
+                   <th>Project Name</th>
+                   {/*<th>Name</th>*/}
+                 </tr>
+                </thead>
+                <tbody>
+                 {items.map(item => (
+                   <tr
+                     key={item.id}
+                     onClick={() => handleItemClick(item)}
+                     className={selectedItem && selectedItem.id === item.id ? 'table-primary' : ''}
+                   >
+                     {/*<td>{item["Project ID"]}</td>*/}
+                     <td><Link to={`/details/${item.id}`}>{item["Project Name"]}</Link></td>
+                   </tr>
+                 ))}
+                </tbody>
+            </table>
         </div>
-    </div>
+     </Layout>
   );
 }
 

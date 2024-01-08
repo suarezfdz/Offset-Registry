@@ -7,7 +7,57 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+a {
+    color: #d5e2ed !important;
+    text-decoration: underline;
+}
+
+
+/* Add this line at the top */
+@import '~bootstrap/dist/css/bootstrap.min.css';
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.w-nav-menu {
+    float: right;
+    position: relative;
+}
+
+.nav-link {
+    color: rgba(216, 223, 233, .8);
+    padding: 12px 28px;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 140%;
+    transition: color .4s cubic-bezier(.25, .46, .45, .94);
+}
+
+.w-nav-link {
+    vertical-align: top;
+    color: #222;
+    text-align: left;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20px;
+    text-decoration: none;
+    display: inline-block;
+    position: relative;
+}
+
+.w-nav-menu {
+    float: right;
+    position: relative;
+}
+
+.grid-navbar {
+    z-index: 10;
+    width: 100%;
+    grid-column-gap: 10px;
+    grid-row-gap: 10px;
+    grid-template-rows: auto;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+}
+

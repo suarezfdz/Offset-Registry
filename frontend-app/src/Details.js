@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Breadcrumb from './Breadcrumb';
 import Chart from 'chart.js/auto';
+import Layout from './Layout';
 
 const Details = () => {
   const { itemId } = useParams();
@@ -165,14 +166,11 @@ const Details = () => {
   }, [itemId]);
 
   return (
-    <div className="container mt-5">
-      <Breadcrumb path={['Home', 'Details']} />
-
-      <Link to="/home" className="btn btn-primary mb-4">
-        Back to List
-      </Link>
+    <Layout
+        path={['Home', 'Details']}
+    >
       {item ? (
-        <div><h1 className="mb-4">{item["Project Name"]}</h1>
+        <div className="container" style={{ 'color': 'white'  }}><h1 className="mb-4">{item["Project Name"]}</h1>
             <div>
               <div className="row mt-4">
                 <div className="col-md-6">
@@ -208,7 +206,7 @@ const Details = () => {
       ) : (
         <p>Loading...</p>
       )}
-    </div>
+    </Layout>
   );
 };
 

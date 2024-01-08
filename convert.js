@@ -11,7 +11,7 @@ const pool = new Pool({
 });
 
 // Read Excel file
-const workbook = xlsx.readFile('data/data.xlsx');
+const workbook = xlsx.readFile('data/test1.xlsx');
 const sheetName = workbook.SheetNames[0];
 const sheet = workbook.Sheets[sheetName];
 const urlRegex = /'/gi;

@@ -10,25 +10,37 @@ services:
       POSTGRES_DB: mydb
     ports:
       - "4000:5432"
-  
-#  nodejs:
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
-#    volumes:
-#      - .:/app
-#    ports:
-#      - "3000:3000"
-#    depends_on:
-#      - postgres
-  
-#  react:
-#    image: node:14
-#    working_dir: /app/client
-#    command: npm start
-#    volumes:
-#      - ./client:/app/client
-#    ports:
-#      - "8000:8000"
-#    depends_on:
-#      - nodejs
+    networks:
+      - app-network
+
+  backend:
+    build:
+      context: ./server-app
+    container_name: backend-container
+    environment:
+      PGUSER: user
+      PGHOST: postgres
+      PGDATABASE: mydb
+      PGPASSWORD: password
+      PGPORT: 5432
+    ports:
+      - "5000:5000"
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./frontend-app
+    container_name: frontend-container
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
