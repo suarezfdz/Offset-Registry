@@ -15,8 +15,6 @@ const Details = () => {
 
         const apiHost = process.env.SERVER_API_HOST || 'http://localhost:5000'; // Use the environment variable or a default value
 
-        console.log(`The apiHost is ${apiHost}`)
-
         const response = await fetch(
           `${apiHost}/api/items/${itemId}`
         );
