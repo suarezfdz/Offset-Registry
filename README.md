@@ -5,7 +5,7 @@
 
 This project consists of multiple applications, including a frontend, backend, and PostgreSQL database. The entire system is deployed on Vercel, with separate deployments for the frontend, backend, and PostgreSQL database. Whenever a change is pushed to the main branch, an automatic deployment process is triggered to update the live version of the project on Vercel.
 
-## Apps
+## Getting started
 
 ### 1. Frontend
 
@@ -45,9 +45,9 @@ The PostgreSQL database stores the data used by the backend and is an essential 
 
 To set up the project locally for development:
 
-1.  Clone the repository: `git clone [repository URL]`
+1.  Clone the repository: `git clone git@github.com:suarezfdz/Offset-Registry.git`
 2.  Navigate to the root and use `docker compose up --build`.
-3.  Set up a local PostgreSQL database and update the backend configuration accordingly.
+3.  Set up a local PostgreSQL database and update the backend configuration accordingly. Look at the `data` folder.
 4.  Run the frontend and backend locally using `npm start` or the appropriate command for your development environment.
 
 ## Contributors
