@@ -1,7 +1,7 @@
 // pages/api/hello.js
 import { sql } from '@vercel/postgres';
 
-const getProjects = async (req, res) => {
+const  getProjects = async (req, res) => {
   const { page = 1, pageSize = 10, search = '' } = req.query;
   const offset = (page - 1) * pageSize;
 
@@ -30,28 +30,28 @@ const getProjects = async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 };
-
-const getProject = async (req, res) => {
-  const { itemId } = req.params;
-
-  try {
-
-      const result = await sql`
-            SELECT *
-            FROM registryoffsetprojects
-            WHERE WHERE id =  ${itemId}`;
-
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: 'Item not found' });
-    }
-
-    const item = result.rows[0];
-    res.json(item);
-  } catch (error) {
-    console.error('Error fetching item details', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-};
+//
+//const getProject = async (req, res) => {
+//  const { itemId } = req.params;
+//
+//  try {
+//
+//      const result = await sql`
+//            SELECT *
+//            FROM registryoffsetprojects
+//            WHERE WHERE id =  ${itemId}`;
+//
+//    if (result.rows.length === 0) {
+//      return res.status(404).json({ error: 'Item not found' });
+//    }
+//
+//    const item = result.rows[0];
+//    res.json(item);
+//  } catch (error) {
+//    console.error('Error fetching item details', error);
+//    res.status(500).json({ error: 'Internal server error' });
+//  }
+//};
 
 const handleErrors = (e, res) => {
   if (e.message.includes('relation "users" does not exist')) {
@@ -64,10 +64,8 @@ const handleErrors = (e, res) => {
   }
 };
 
-// Default export that calls one of the named exports
+//// Default export that calls one of the named exports
 export default async (req, res) => {
   // You can choose which function to call based on your requirements
   await getProjects(req, res);
 };
-
-export { getProject };
