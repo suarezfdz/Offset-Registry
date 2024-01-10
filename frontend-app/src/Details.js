@@ -9,6 +9,8 @@ const Details = () => {
   const { itemId } = useParams();
   const [item, setItem] = useState(null);
 
+  const chartRef = useRef(null);
+
   useEffect(() => {
     const fetchItemDetails = async () => {
       try {
@@ -39,7 +41,7 @@ const Details = () => {
             borderWidth: 1,
           }));
 
-        configureChart(document.getElementById('myChart'), years, datasets);
+        configureChart(chartRef.current, years, datasets);
 
       } catch (error) {
         console.error('Error fetching item details', error);
@@ -97,8 +99,8 @@ const Details = () => {
               </div>
             </div>
             <div className="mt-4">
-                <h3></h3>
-                {item && <canvas id="myChart" width="400" height="200"></canvas>}
+              <h3></h3>
+              <canvas ref={chartRef} width="400" height="200"></canvas>
             </div>
         </div>
       ) : (
