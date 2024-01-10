@@ -82,11 +82,11 @@ function ListPage() {
 
         // Extract total count from the response headers
         const totalCount = parseInt(response.headers.get('X-Total-Count'), 10);
-        console.log(totalCount)
-        console.log(response.headers.get('X-Total-Count'))
+//        console.log(totalCount)
+//        console.log(response.headers.get('X-Total-Count'))
         const calculatedTotalPages = Math.ceil(totalCount / pageSize);
         setTotalPages(calculatedTotalPages);
-        console.log(Math.ceil(totalCount / pageSize))
+//        console.log(Math.ceil(totalCount / pageSize))
 
         // Reset selected item when fetching new items
         setSelectedItem(null);
@@ -184,7 +184,7 @@ function ListPage() {
                      className={selectedItem && selectedItem.id === item.id ? 'table-primary' : ''}
                    >
                      {/*<td>{item["Project ID"]}</td>*/}
-                     <td><Link to={`/details/${item.id}`}>{item["Project Name"]}</Link></td>
+                     <td><Link to={`/details/${item.id}`}>{item["projectname"]}</Link></td>
                    </tr>
                  ))}
                 </tbody>

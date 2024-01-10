@@ -46,24 +46,24 @@ const Details = () => {
           datasets: [
             {
               label: 'Credits issued by vintage',
-              data: [data["Credits issued by vintage year 2006"],
-                     data["Credits issued by vintage year 2007"],
-                     data["Credits issued by vintage year 2008"],
-                     data["Credits issued by vintage year 2009"],
-                     data["Credits issued by vintage year 2010"],
-                     data["Credits issued by vintage year 2011"],
-                     data["Credits issued by vintage year 2012"],
-                     data["Credits issued by vintage year 2013"],
-                     data["Credits issued by vintage year 2014"],
-                     data["Credits issued by vintage year 2015"],
-                     data["Credits issued by vintage year 2016"],
-                     data["Credits issued by vintage year 2017"],
-                     data["Credits issued by vintage year 2018"],
-                     data["Credits issued by vintage year 2019"],
-                     data["Credits issued by vintage year 2020"],
-                     data["Credits issued by vintage year 2021"],
-                     data["Credits issued by vintage year 2022"],
-                     data["Credits issued by vintage year 2023"]],
+              data: [data["creditsissuedbyvintageyear2006"],
+                     data["creditsissuedbyvintageyear2007"],
+                     data["creditsissuedbyvintageyear2008"],
+                     data["creditsissuedbyvintageyear2009"],
+                     data["creditsissuedbyvintageyear2010"],
+                     data["creditsissuedbyvintageyear2011"],
+                     data["creditsissuedbyvintageyear2012"],
+                     data["creditsissuedbyvintageyear2013"],
+                     data["creditsissuedbyvintageyear2014"],
+                     data["creditsissuedbyvintageyear2015"],
+                     data["creditsissuedbyvintageyear2016"],
+                     data["creditsissuedbyvintageyear2017"],
+                     data["creditsissuedbyvintageyear2018"],
+                     data["creditsissuedbyvintageyear2019"],
+                     data["creditsissuedbyvintageyear2020"],
+                     data["creditsissuedbyvintageyear2021"],
+                     data["creditsissuedbyvintageyear2022"],
+                     data["creditsissuedbyvintageyear2023"]],
               backgroundColor: [
                 'rgba(113,195,97, 0.2)',
               ],
@@ -73,24 +73,24 @@ const Details = () => {
               borderWidth: 1,
             },{
               label: 'Credits retired by year',
-              data: [data["Credits retired in 2006"],
-                     data["Credits retired in 2007"],
-                     data["Credits retired in 2008"],
-                     data["Credits retired in 2009"],
-                     data["Credits retired in 2010"],
-                     data["Credits retired in 2011"],
-                     data["Credits retired in 2012"],
-                     data["Credits retired in 2013"],
-                     data["Credits retired in 2014"],
-                     data["Credits retired in 2015"],
-                     data["Credits retired in 2016"],
-                     data["Credits retired in 2017"],
-                     data["Credits retired in 2018"],
-                     data["Credits retired in 2019"],
-                     data["Credits retired in 2020"],
-                     data["Credits retired in 2021"],
-                     data["Credits retired in 2022"],
-                     data["Credits retired in 2023"]],
+              data: [data["creditsretiredin2006"],
+                     data["creditsretiredin2007"],
+                     data["creditsretiredin2008"],
+                     data["creditsretiredin2009"],
+                     data["creditsretiredin2010"],
+                     data["creditsretiredin2011"],
+                     data["creditsretiredin2012"],
+                     data["creditsretiredin2013"],
+                     data["creditsretiredin2014"],
+                     data["creditsretiredin2015"],
+                     data["creditsretiredin2016"],
+                     data["creditsretiredin2017"],
+                     data["creditsretiredin2018"],
+                     data["creditsretiredin2019"],
+                     data["creditsretiredin2020"],
+                     data["creditsretiredin2021"],
+                     data["creditsretiredin2022"],
+                     data["creditsretiredin2023"]],
               backgroundColor: [
                 'rgba(59,126,161,0.2)',
               ],
@@ -100,24 +100,24 @@ const Details = () => {
               borderWidth: 1,
             },{
               label: 'Credits remaining by vintage by year',
-              data: [data["Credits remaining by vintage: 2006"],
-                     data["Credits remaining by vintage: 2007"],
-                     data["Credits remaining by vintage: 2008"],
-                     data["Credits remaining by vintage: 2009"],
-                     data["Credits remaining by vintage: 2010"],
-                     data["Credits remaining by vintage: 2011"],
-                     data["Credits remaining by vintage: 2012"],
-                     data["Credits remaining by vintage: 2013"],
-                     data["Credits remaining by vintage: 2014"],
-                     data["Credits remaining by vintage: 2015"],
-                     data["Credits remaining by vintage: 2016"],
-                     data["Credits remaining by vintage: 2017"],
-                     data["Credits remaining by vintage: 2018"],
-                     data["Credits remaining by vintage: 2019"],
-                     data["Credits remaining by vintage: 2020"],
-                     data["Credits remaining by vintage: 2021"],
-                     data["Credits remaining by vintage: 2022"],
-                     data["Credits remaining by vintage: 2023"]],
+              data: [data["creditsremainingbyvintageyear2006"],
+                     data["creditsremainingbyvintageyear2007"],
+                     data["creditsremainingbyvintageyear2008"],
+                     data["creditsremainingbyvintageyear2009"],
+                     data["creditsremainingbyvintageyear2010"],
+                     data["creditsremainingbyvintageyear2011"],
+                     data["creditsremainingbyvintageyear2012"],
+                     data["creditsremainingbyvintageyear2013"],
+                     data["creditsremainingbyvintageyear2014"],
+                     data["creditsremainingbyvintageyear2015"],
+                     data["creditsremainingbyvintageyear2016"],
+                     data["creditsremainingbyvintageyear2017"],
+                     data["creditsremainingbyvintageyear2018"],
+                     data["creditsremainingbyvintageyear2019"],
+                     data["creditsremainingbyvintageyear2020"],
+                     data["creditsremainingbyvintageyear2021"],
+                     data["creditsremainingbyvintageyear2022"],
+                     data["creditsremainingbyvintageyear2023"]],
               backgroundColor: [
                 'rgba(170,31,64,0.2)',
               ],
@@ -127,24 +127,24 @@ const Details = () => {
               borderWidth: 1,
             },{
               label: 'Credits issued by issuance year',
-              data: [data["Credits issued by issuance year 2006"],
-                     data["Credits issued by issuance year 2007"],
-                     data["Credits issued by issuance year 2008"],
-                     data["Credits issued by issuance year 2009"],
-                     data["Credits issued by issuance year 2010"],
-                     data["Credits issued by issuance year 2011"],
-                     data["Credits issued by issuance year 2012"],
-                     data["Credits issued by issuance year 2013"],
-                     data["Credits issued by issuance year 2014"],
-                     data["Credits issued by issuance year 2015"],
-                     data["Credits issued by issuance year 2016"],
-                     data["Credits issued by issuance year 2017"],
-                     data["Credits issued by issuance year 2018"],
-                     data["Credits issued by issuance year 2019"],
-                     data["Credits issued by issuance year 2020"],
-                     data["Credits issued by issuance year 2021"],
-                     data["Credits issued by issuance year 2022"],
-                     data["Credits issued by issuance year 2023"]],
+              data: [data["creditsissuedbyissuanceyear2006"],
+                     data["creditsissuedbyissuanceyear2007"],
+                     data["creditsissuedbyissuanceyear2008"],
+                     data["creditsissuedbyissuanceyear2009"],
+                     data["creditsissuedbyissuanceyear2010"],
+                     data["creditsissuedbyissuanceyear2011"],
+                     data["creditsissuedbyissuanceyear2012"],
+                     data["creditsissuedbyissuanceyear2013"],
+                     data["creditsissuedbyissuanceyear2014"],
+                     data["creditsissuedbyissuanceyear2015"],
+                     data["creditsissuedbyissuanceyear2016"],
+                     data["creditsissuedbyissuanceyear2017"],
+                     data["creditsissuedbyissuanceyear2018"],
+                     data["creditsissuedbyissuanceyear2019"],
+                     data["creditsissuedbyissuanceyear2020"],
+                     data["creditsissuedbyissuanceyear2021"],
+                     data["creditsissuedbyissuanceyear2022"],
+                     data["creditsissuedbyissuanceyear2023"]],
               backgroundColor: [
                 'rgba(196, 130, 14, 0.2)',
               ],
@@ -170,29 +170,29 @@ const Details = () => {
         path={['Home', 'Details']}
     >
       {item ? (
-        <div className="container" style={{ 'color': 'white'  }}><h1 className="mb-4">{item["Project Name"]}</h1>
+        <div className="container" style={{ 'color': 'white'  }}><h1 className="mb-4">{item["projectname"]}</h1>
             <div>
               <div className="row mt-4">
                 <div className="col-md-6">
-                  <p><b>Project Owner:</b> {item["Project Owner"]}</p>
-                  <p><b>Offset Project Operator:</b> {item["Offset Project Operator"]}</p>
-                  <p><b>Authorized Project Designee:</b> {item["Authorized Project Designee"]}</p>
-                  <p><b>Verifier:</b> {item["Verifier"]}</p>
-                  <p><b>Estimated Annual Emission Reductions:</b> {item["Estimated Annual Emission Reductions"]}</p>
-                  <p><b>PERs:</b> {item["PERs"]}</p>
-                  <p><b>Registry / ARB:</b> {item["Registry / ARB"]}</p>
-                  <p><b>ARB Project Detail:</b> {item["ARB Project Detail"]}</p>
+                  <p><b>Project Owner:</b> {item["projectowner"]}</p>
+                  <p><b>Offset Project Operator:</b> {item["offsetprojectoperator"]}</p>
+                  <p><b>Authorized Project Designee:</b> {item["authorizedprojectdesignee"]}</p>
+                  <p><b>Verifier:</b> {item["verifier"]}</p>
+                  <p><b>Estimated Annual Emission Reductions:</b> {item["estimatedannualemissionreductions"]}</p>
+                  <p><b>PERs:</b> {item["pers"]}</p>
+                  <p><b>Registry / ARB:</b> {item["registryarb"]}</p>
+                  <p><b>ARB Project Detail:</b> {item["arbprojectdetail"]}</p>
 
                 </div>
                 <div className="col-md-6">
-                  <p><b>ARB ID:</b> {item["ARB ID"]}</p>
-                  <p><b>Project Listed:</b> {item["Project Listed"]}</p>
-                  <p><b>Project Registered:</b> {item["Project Registered"]}</p>
-                  <p><b>CCB / Certifications:</b> {item["CCB / Certifications"]}</p>
-                  <p><b>Project Type:</b> {item["Project Type"]}</p>
-                  <p><b>Registry Documents:</b> {item["Registry Documents"]}</p>
+                  <p><b>ARB ID:</b> {item["arbid"]}</p>
+                  <p><b>Project Listed:</b> {item["projectlisted"]}</p>
+                  <p><b>Project Registered:</b> {item["projectregistered"]}</p>
+                  <p><b>CCB / Certifications:</b> {item["ccb_certifications"]}</p>
+                  <p><b>Project Type:</b> {item["projecttype"]}</p>
+                  <p><b>Registry Documents:</b> {item["registrydocuments"]}</p>
                   <p><b>Project Website: </b>
-                    <Link href={item['Project Website']} target="_blank" >
+                    <Link href={item['projectwebsite']} target="_blank" >
                         Visit Project Website
                     </Link></p>
                 </div>
