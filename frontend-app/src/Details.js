@@ -1,5 +1,5 @@
 // DetailsPage.js
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Breadcrumb from './Breadcrumb';
 import Chart from 'chart.js/auto';
@@ -29,20 +29,20 @@ const Details = () => {
         const data = await response.json();
         setItem(data);
 
-        const years = Array.from({ length: 18 }, (_, i) => `Year ${2006 + i}`);
+        if (chartRef.current) {
+          const years = Array.from({ length: 18 }, (_, i) => `Year ${2006 + i}`);
+          const datasets = Object.keys(data)
+            .filter((key) => key.includes('credits'))
+            .map((key) => ({
+              label: key.replace('credits', 'Credits ') + ' by year',
+              data: years.map((year) => data[key + year]),
+              backgroundColor: 'rgba(113,195,97, 0.2)',
+              borderColor: 'rgba(113,195,97,1)',
+              borderWidth: 1,
+            }));
 
-        const datasets = Object.keys(data)
-          .filter((key) => key.includes('credits'))
-          .map((key) => ({
-            label: key.replace('credits', 'Credits ') + ' by year',
-            data: years.map((year) => data[key + year]),
-            backgroundColor: 'rgba(113,195,97, 0.2)',
-            borderColor: 'rgba(113,195,97,1)',
-            borderWidth: 1,
-          }));
-
-        configureChart(chartRef.current, years, datasets);
-
+          configureChart(chartRef.current, years, datasets);
+        }
       } catch (error) {
         console.error('Error fetching item details', error);
       }
