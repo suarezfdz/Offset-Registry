@@ -9,18 +9,11 @@ const Details = () => {
   const { itemId } = useParams();
   const [item, setItem] = useState(null);
 
-  const chartRef = useRef(null);
-
-  useEffect(() => {
+useEffect(() => {
     const fetchItemDetails = async () => {
       try {
-
-        const apiHost = 'https://offset-registry.vercel.app'; // Use the environment variable or a default value
-//        const apiHost = process.env.SERVER_API_HOST || 'http://localhost:5000'; // Use the environment variable or a default value
-
-        const response = await fetch(
-          `${apiHost}/api/offsets/${itemId}`
-        );
+        const apiHost = process.env.REACT_APP_SERVER_API_HOST || 'http://localhost:5000';
+        const response = await fetch(`${apiHost}/api/offsets/${itemId}`);
 
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -28,21 +21,6 @@ const Details = () => {
 
         const data = await response.json();
         setItem(data);
-
-        if (chartRef.current) {
-          const years = Array.from({ length: 18 }, (_, i) => `Year ${2006 + i}`);
-          const datasets = Object.keys(data)
-            .filter((key) => key.includes('credits'))
-            .map((key) => ({
-              label: key.replace('credits', 'Credits ') + ' by year',
-              data: years.map((year) => data[key + year]),
-              backgroundColor: 'rgba(113,195,97, 0.2)',
-              borderColor: 'rgba(113,195,97,1)',
-              borderWidth: 1,
-            }));
-
-          configureChart(chartRef.current, years, datasets);
-        }
       } catch (error) {
         console.error('Error fetching item details', error);
       }
@@ -51,19 +29,34 @@ const Details = () => {
     fetchItemDetails();
   }, [itemId]);
 
-  const configureChart = (ctx, labels, chartData) => {
-    if (ctx) {
-      new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: labels,
-          datasets: chartData,
-        },
-      });
-    } else {
-      console.error('Canvas element with ID "myChart" not found.');
+  useEffect(() => {
+    if (item) {
+      const years = Array.from({ length: 18 }, (_, i) => `Year ${2006 + i}`);
+      const datasets = Object.keys(item)
+        .filter((key) => key.includes('credits'))
+        .map((key) => ({
+          label: key.replace('credits', 'Credits ') + ' by year',
+          data: years.map((year) => item[key + year]),
+          backgroundColor: 'rgba(113,195,97, 0.2)',
+          borderColor: 'rgba(113,195,97,1)',
+          borderWidth: 1,
+        }));
+
+      const ctx = document.getElementById('myChart');
+
+      if (ctx) {
+        new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: years,
+            datasets: datasets,
+          },
+        });
+      } else {
+        console.error('Canvas element with ID "myChart" not found.');
+      }
     }
-  };
+  }, [item]);
 
   return (
     <Layout
