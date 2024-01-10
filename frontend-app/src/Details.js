@@ -27,148 +27,19 @@ const Details = () => {
         const data = await response.json();
         setItem(data);
 
-        const ctx = document.getElementById('myChart');
+        const years = Array.from({ length: 18 }, (_, i) => `Year ${2006 + i}`);
 
-          if (ctx) {
-            new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                      labels: ["Year 2006",
-                               "Year 2007",
-                               "Year 2008",
-                               "Year 2009",
-                               "Year 2010",
-                               "Year 2011",
-                               "Year 2012",
-                               "Year 2013",
-                               "Year 2014",
-                               "Year 2015",
-                               "Year 2016",
-                               "Year 2017",
-                               "Year 2018",
-                               "Year 2019",
-                               "Year 2020",
-                               "Year 2021",
-                               "Year 2022",
-                               "Year 2023"],
-                      datasets: [
-                        {
-                          label: 'Credits issued by vintage',
-                          data: [data["creditsissuedbyvintageyear2006"],
-                                 data["creditsissuedbyvintageyear2007"],
-                                 data["creditsissuedbyvintageyear2008"],
-                                 data["creditsissuedbyvintageyear2009"],
-                                 data["creditsissuedbyvintageyear2010"],
-                                 data["creditsissuedbyvintageyear2011"],
-                                 data["creditsissuedbyvintageyear2012"],
-                                 data["creditsissuedbyvintageyear2013"],
-                                 data["creditsissuedbyvintageyear2014"],
-                                 data["creditsissuedbyvintageyear2015"],
-                                 data["creditsissuedbyvintageyear2016"],
-                                 data["creditsissuedbyvintageyear2017"],
-                                 data["creditsissuedbyvintageyear2018"],
-                                 data["creditsissuedbyvintageyear2019"],
-                                 data["creditsissuedbyvintageyear2020"],
-                                 data["creditsissuedbyvintageyear2021"],
-                                 data["creditsissuedbyvintageyear2022"],
-                                 data["creditsissuedbyvintageyear2023"]],
-                          backgroundColor: [
-                            'rgba(113,195,97, 0.2)',
-                          ],
-                          borderColor: [
-                            'rgba(113,195,97,1)',
-                          ],
-                          borderWidth: 1,
-                        },{
-                          label: 'Credits retired by year',
-                          data: [data["creditsretiredin2006"],
-                                 data["creditsretiredin2007"],
-                                 data["creditsretiredin2008"],
-                                 data["creditsretiredin2009"],
-                                 data["creditsretiredin2010"],
-                                 data["creditsretiredin2011"],
-                                 data["creditsretiredin2012"],
-                                 data["creditsretiredin2013"],
-                                 data["creditsretiredin2014"],
-                                 data["creditsretiredin2015"],
-                                 data["creditsretiredin2016"],
-                                 data["creditsretiredin2017"],
-                                 data["creditsretiredin2018"],
-                                 data["creditsretiredin2019"],
-                                 data["creditsretiredin2020"],
-                                 data["creditsretiredin2021"],
-                                 data["creditsretiredin2022"],
-                                 data["creditsretiredin2023"]],
-                          backgroundColor: [
-                            'rgba(59,126,161,0.2)',
-                          ],
-                          borderColor: [
-                            'rgba(59,126,161,1)',
-                          ],
-                          borderWidth: 1,
-                        },{
-                          label: 'Credits remaining by vintage by year',
-                          data: [data["creditsremainingbyvintageyear2006"],
-                                 data["creditsremainingbyvintageyear2007"],
-                                 data["creditsremainingbyvintageyear2008"],
-                                 data["creditsremainingbyvintageyear2009"],
-                                 data["creditsremainingbyvintageyear2010"],
-                                 data["creditsremainingbyvintageyear2011"],
-                                 data["creditsremainingbyvintageyear2012"],
-                                 data["creditsremainingbyvintageyear2013"],
-                                 data["creditsremainingbyvintageyear2014"],
-                                 data["creditsremainingbyvintageyear2015"],
-                                 data["creditsremainingbyvintageyear2016"],
-                                 data["creditsremainingbyvintageyear2017"],
-                                 data["creditsremainingbyvintageyear2018"],
-                                 data["creditsremainingbyvintageyear2019"],
-                                 data["creditsremainingbyvintageyear2020"],
-                                 data["creditsremainingbyvintageyear2021"],
-                                 data["creditsremainingbyvintageyear2022"],
-                                 data["creditsremainingbyvintageyear2023"]],
-                          backgroundColor: [
-                            'rgba(170,31,64,0.2)',
-                          ],
-                          borderColor: [
-                            'rgba(170,31,64,1)',
-                          ],
-                          borderWidth: 1,
-                        },{
-                          label: 'Credits issued by issuance year',
-                          data: [data["creditsissuedbyissuanceyear2006"],
-                                 data["creditsissuedbyissuanceyear2007"],
-                                 data["creditsissuedbyissuanceyear2008"],
-                                 data["creditsissuedbyissuanceyear2009"],
-                                 data["creditsissuedbyissuanceyear2010"],
-                                 data["creditsissuedbyissuanceyear2011"],
-                                 data["creditsissuedbyissuanceyear2012"],
-                                 data["creditsissuedbyissuanceyear2013"],
-                                 data["creditsissuedbyissuanceyear2014"],
-                                 data["creditsissuedbyissuanceyear2015"],
-                                 data["creditsissuedbyissuanceyear2016"],
-                                 data["creditsissuedbyissuanceyear2017"],
-                                 data["creditsissuedbyissuanceyear2018"],
-                                 data["creditsissuedbyissuanceyear2019"],
-                                 data["creditsissuedbyissuanceyear2020"],
-                                 data["creditsissuedbyissuanceyear2021"],
-                                 data["creditsissuedbyissuanceyear2022"],
-                                 data["creditsissuedbyissuanceyear2023"]],
-                          backgroundColor: [
-                            'rgba(196, 130, 14, 0.2)',
-                          ],
-                          borderColor: [
-                            'rgba(196, 130, 14, 1)',
-                          ],
-                          borderWidth: 1,
-                        },
-                      ],
-                    },
-                    });
-          } else {
-            console.error('Canvas element with ID "myChart" not found.');
-          }
+        const datasets = Object.keys(data)
+          .filter((key) => key.includes('credits'))
+          .map((key) => ({
+            label: key.replace('credits', 'Credits ') + ' by year',
+            data: years.map((year) => data[key + year]),
+            backgroundColor: 'rgba(113,195,97, 0.2)',
+            borderColor: 'rgba(113,195,97,1)',
+            borderWidth: 1,
+          }));
 
-
+        configureChart(document.getElementById('myChart'), years, datasets);
 
       } catch (error) {
         console.error('Error fetching item details', error);
@@ -177,6 +48,20 @@ const Details = () => {
 
     fetchItemDetails();
   }, [itemId]);
+
+  const configureChart = (ctx, labels, chartData) => {
+    if (ctx) {
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: chartData,
+        },
+      });
+    } else {
+      console.error('Canvas element with ID "myChart" not found.');
+    }
+  };
 
   return (
     <Layout
