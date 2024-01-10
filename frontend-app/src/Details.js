@@ -13,7 +13,8 @@ const Details = () => {
     const fetchItemDetails = async () => {
       try {
 
-        const apiHost = process.env.SERVER_API_HOST || 'http://localhost:5000'; // Use the environment variable or a default value
+        const apiHost = 'https://offset-registry.vercel.app'; // Use the environment variable or a default value
+//        const apiHost = process.env.SERVER_API_HOST || 'http://localhost:5000'; // Use the environment variable or a default value
 
         const response = await fetch(
           `${apiHost}/api/items/${itemId}`
