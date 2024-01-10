@@ -98,7 +98,7 @@ const Details = () => {
             </div>
             <div className="mt-4">
                 <h3></h3>
-                <canvas id="myChart" width="400" height="200"></canvas>
+                {item && <canvas id="myChart" width="400" height="200"></canvas>}
             </div>
         </div>
       ) : (
