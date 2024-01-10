@@ -12,7 +12,11 @@ const Details = () => {
   useEffect(() => {
     const fetchItemDetails = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/items/${itemId}`);
+
+        const apiHost = process.env.SERVER_API_HOST || 'http://localhost:5000'; // Use the environment variable or a default value
+        const response = await fetch(
+          `${apiHost}/api/items/${itemId}`
+        );
 
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
