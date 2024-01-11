@@ -84,8 +84,8 @@ function ListPage() {
         setItems(data);
 
         // Extract total count from the response headers
-//        const totalCount = parseInt(response.headers.get('X-Total-Count'), 10);
-        const totalCount = parseInt(response.headers.get('x-total-count'), 10);
+        const totalCount = parseInt(response.headers.get('X-Total-Count'), 10);
+//        const totalCount = parseInt(response.headers.get('x-total-count'), 10);
         console.log(response.headers.get('Content-Type'));
 
         console.log(response.headers)
