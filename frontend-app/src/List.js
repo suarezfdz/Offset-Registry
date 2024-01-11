@@ -84,12 +84,16 @@ function ListPage() {
         setItems(data);
 
         // Extract total count from the response headers
-        const totalCount = parseInt(response.headers.get('X-Total-Count'), 10);
-//        console.log(totalCount)
-//        console.log(response.headers.get('X-Total-Count'))
+//        const totalCount = parseInt(response.headers.get('X-Total-Count'), 10);
+        const totalCount = parseInt(response.headers.get('x-total-count'), 10);
+        console.log(response.headers.get('Content-Type'));
+
+        console.log(response.headers)
+        console.log(totalCount)
+        console.log(response.headers.get('X-Total-Count'))
         const calculatedTotalPages = Math.ceil(totalCount / pageSize);
         setTotalPages(calculatedTotalPages);
-//        console.log(Math.ceil(totalCount / pageSize))
+        console.log(Math.ceil(totalCount / pageSize))
 
         // Reset selected item when fetching new items
         setSelectedItem(null);
@@ -172,6 +176,30 @@ function ListPage() {
         >
         <div className="col-md-12">
             <Search onSearch={handleSearch} />
+
+            <div className="row">
+
+                <div className="mt-4">
+
+                    <Pagination>
+                        <Pagination.First />
+                        <Pagination.Prev
+                            disabled={currentPage === 1}
+                            onClick={() => setCurrentPage(currentPage - 1)}
+                          />
+
+                        {renderPaginationItems()}
+                    <Pagination.Next
+                        disabled={currentPage === totalPages}
+                        onClick={() => setCurrentPage(currentPage + 1)}
+                    />
+                    <Pagination.Last />
+                    </Pagination>
+
+                </div>
+            </div>
+
+
             <table className="table table-hover" style={{ '--bs-table-bg': '#15302600', '--bs-table-color': 'white'  }}>
                 <thead>
                  <tr>
