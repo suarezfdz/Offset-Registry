@@ -23,35 +23,12 @@ const  getProjects = async (req, res) => {
     `;
 
     res.setHeader('X-Total-Count', totalCount.rows[0].count);
-//    console.log(totalCount.rows[0].count)
     res.json(result.rows);
   } catch (error) {
     console.error('Error fetching items', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
-//
-//const getProject = async (req, res) => {
-//  const { itemId } = req.params;
-//
-//  try {
-//
-//      const result = await sql`
-//            SELECT *
-//            FROM registryoffsetprojects
-//            WHERE WHERE id =  ${itemId}`;
-//
-//    if (result.rows.length === 0) {
-//      return res.status(404).json({ error: 'Item not found' });
-//    }
-//
-//    const item = result.rows[0];
-//    res.json(item);
-//  } catch (error) {
-//    console.error('Error fetching item details', error);
-//    res.status(500).json({ error: 'Internal server error' });
-//  }
-//};
 
 const handleErrors = (e, res) => {
   if (e.message.includes('relation "users" does not exist')) {
