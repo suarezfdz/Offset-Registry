@@ -96,28 +96,6 @@ app.get('/api/samso/projects', async (req, res) => {
   }
 });
 
-app.get('/api/samso/books', async (req, res) => {
-  const { page = 1, pageSize = 10, search = '' } = req.query;
-  const offset = (page - 1) * pageSize;
-
-  try {
-
-   const result = await pool.query(
-        `SELECT id, * FROM samso_books WHERE "entity" ILIKE $1 ORDER BY id LIMIT $2 OFFSET $3`,
-        [`%${search}%`, pageSize, offset]
-      );
-
-    const totalCount = await pool.query('SELECT COUNT(*) FROM samso_books WHERE "entity" ILIKE $1', [`%${search}%`]);
-
-    res.header('X-Total-Count', totalCount.rows[0].count);
-    console.log(totalCount.rows[0].count)
-    res.json(result.rows);
-  } catch (error) {
-    console.error('Error fetching items', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
 app.post('/api/samso/offsets', async (req, res) => {
   try {
     // Extract data from the request body
@@ -149,68 +127,3 @@ app.post('/api/samso/offsets', async (req, res) => {
   }
 });
 
-app.post('/api/samso/books', async (req, res) => {
-  try {
-    // Extract data from the request body
-    const {
-      entity,
-      type,
-      parent,
-      lei,
-      baseyear,
-      targetyear
-    } = req.body;
-
-    console.log(req.body)
-
-    // Perform the PostgreSQL insertion
-    const result = await pool.query(
-      'INSERT INTO samso_books (entity, type, parent, lei, base, target) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-      [entity, type, parent, lei, baseyear, targetyear]
-    );
-
-    // Respond with the inserted item
-    res.json(result.rows[0]);
-  } catch (error) {
-    console.error('Error inserting book:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-// API endpoint for fetching details of a specific item
-app.get('/api/samso/books/parents', async (req, res) => {
-
-  try {
-    const result = await pool.query('SELECT id, entity FROM samso_books WHERE type = \'Parent\'');
-
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: 'Item not found' });
-    }
-    res.json(result.rows);
-  } catch (error) {
-    console.error('Error fetching item details', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
-
-// API endpoint for fetching details of a specific item
-app.get('/api/samso/books/:bookId/emissions', async (req, res) => {
-  const { bookId } = req.params;
-
-  try {
-    const result = await pool.query('SELECT * FROM emissions WHERE book_id = $1', [bookId]);
-
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: 'Book not found' });
-    }
-
-    res.json(result.rows);
-  } catch (error) {
-    console.error('Error fetching emissions', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
