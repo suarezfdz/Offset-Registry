@@ -64,7 +64,7 @@ function ListPage() {
   const [totalPages, setTotalPages] = useState(0);
 
   const navigate = useNavigate();
-  const maxPagesToShow = 20;
+  const maxPagesToShow = 4;
 
   useEffect(() => {
     const fetchItems = async () => {
