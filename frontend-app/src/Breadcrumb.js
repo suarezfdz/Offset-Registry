@@ -9,9 +9,9 @@ const Breadcrumb = ({ path }) => {
         {path.map((item, index) => (
           <li key={index} className={`breadcrumb-item ${index === path.length - 1 ? 'active' : ''}`} style={{ color: '#d5e2ed' }}>
             {index === path.length - 1 ? (
-              item
+              item === 'Home' ? 'Offset Projects' : item
             ) : (
-              <Link to={`/${item.toLowerCase()}`}>{item}</Link>
+              <Link to={`/${item.toLowerCase()}`}>{item === 'Home' ? 'Offset Projects' : item}</Link>
             )}
           </li>
         ))}

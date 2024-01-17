@@ -61,3 +61,22 @@ code {
     align-items: center;
 }
 
+
+button.samso-button {
+    border: 2px solid #BAD172;
+    color: #BAD172;
+    background: #163026;
+}
+
+.page-item.active{
+    border: 0px solid #BAD172;
+    margin: 0px;
+    color: #BAD172;
+}
+
+.page-item.active > .page-link{
+    background: #163026;
+
+    border-color: #BAD172;
+    color: #BAD172;
+}

@@ -27,7 +27,7 @@ const Search = ({ onSearch }) => {
               }
             }}
         />
-        <button className="btn btn-primary" onClick={handleSearch}>
+        <button className="btn samso-button" onClick={handleSearch}>
           Search
         </button>
       </div>
@@ -172,7 +172,7 @@ function ListPage() {
           handleNextGroup={handleNextGroup}
           renderPaginationItems={renderPaginationItems}
           setCurrentPage={setCurrentPage}
-          path={['Offset Projects']}
+          path={['Home']}
         >
         <div className="col-md-12">
             <Search onSearch={handleSearch} />

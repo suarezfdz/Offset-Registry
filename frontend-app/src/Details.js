@@ -16,7 +16,6 @@ const Details = () => {
       try {
 
         const apiHost = 'https://offset-registry.vercel.app'; // Use the environment variable or a default value
-//        const apiHost = process.env.SERVER_API_HOST || 'http://localhost:5000'; // Use the environment variable or a default value
 
         const response = await fetch(
           `${apiHost}/api/offsets/${itemId}`
@@ -173,34 +172,47 @@ const Details = () => {
 
   return (
     <Layout
-        path={['Offset Projects', 'Details']}
+        path={['Home', 'Details']}
     >
       {item ? (
         <div className="container" style={{ 'color': 'white'  }}><h1 className="mb-4">{item["projectname"]}</h1>
             <div>
               <div className="row mt-4">
                 <div className="col-md-6">
-                  <p><b>Project Owner:</b> {item["projectowner"]}</p>
-                  <p><b>Offset Project Operator:</b> {item["offsetprojectoperator"]}</p>
-                  <p><b>Authorized Project Designee:</b> {item["authorizedprojectdesignee"]}</p>
-                  <p><b>Verifier:</b> {item["verifier"]}</p>
-                  <p><b>Estimated Annual Emission Reductions:</b> {item["estimatedannualemissionreductions"]}</p>
-                  <p><b>PERs:</b> {item["pers"]}</p>
-                  <p><b>Registry / ARB:</b> {item["registryarb"]}</p>
-                  <p><b>ARB Project Detail:</b> {item["arbprojectdetail"]}</p>
+                  <p><b>Project Owner:</b> {item["projectowner"] == null ? '-' : item["projectowner"] }</p>
+                  <p><b>Offset Project Operator:</b> {item["offsetprojectoperator"] == null ? '-' : item["offsetprojectoperator"]}</p>
+                  <p><b>Authorized Project Designee:</b> {item["authorizedprojectdesignee"] == null ? '-' : item["authorizedprojectdesignee"]}</p>
+                  <p><b>Verifier:</b> {item["verifier"] == null ? '-' : item["verifier"]}</p>
+                  <p><b>Estimated Annual Emission Reductions:</b> {item["estimatedannualemissionreductions"] == null ? '-' : item["estimatedannualemissionreductions"]}</p>
+                  <p><b>PERs:</b> {item["pers"] == null ? '-' : item["pers"]}</p>
+                  <p><b>Registry / ARB:</b> {item["registryarb"] == null ? '-' : item["registryarb"]}</p>
+                  <p><b>ARB Project Detail:</b> {item["arbprojectdetail"] == null ? '-' : item["arbprojectdetail"]}</p>
 
                 </div>
                 <div className="col-md-6">
-                  <p><b>ARB ID:</b> {item["arbid"]}</p>
-                  <p><b>Project Listed:</b> {item["projectlisted"]}</p>
-                  <p><b>Project Registered:</b> {item["projectregistered"]}</p>
-                  <p><b>CCB / Certifications:</b> {item["ccb_certifications"]}</p>
-                  <p><b>Project Type:</b> {item["projecttype"]}</p>
-                  <p><b>Registry Documents:</b> {item["registrydocuments"]}</p>
+                  <p><b>ARB ID:</b> {item["arbid"] == null ? '-' : item["arbid"]}</p>
+                  <p><b>Project Listed:</b> {item["projectlisted"] == null ? '-' : item["projectlisted"]}</p>
+                  <p><b>Project Registered:</b> {item["projectregistered"] == null ? '-' : item["projectregistered"]}</p>
+                  <p><b>CCB / Certifications:</b> {item["ccb_certifications"] == null ? '-' : item["ccb_certifications"]}</p>
+                  <p><b>Project Type:</b> {item["projecttype"] == null ? '-' : item["projecttype"]}</p>
+                  <p><b>Registry Documents: </b>
+                    {item['registrydocuments'] != null ? (
+                       <a href={item['registrydocuments']} target="_blank" rel="noopener noreferrer">
+                         {item['registrydocuments']}
+                       </a>
+                        ) : (
+                          "-"
+                        )}
+                  </p>
                   <p><b>Project Website: </b>
-                    <Link href={item['projectwebsite']} target="_blank" >
-                        Visit Project Website
-                    </Link></p>
+                  {item['projectwebsite'] != null ? (
+                     <a href={"http://"+item['projectwebsite']} target="_blank" rel="noopener noreferrer">
+                       {item['projectwebsite']}
+                     </a>
+                      ) : (
+                        "-"
+                      )}
+                    </p>
                 </div>
               </div>
             </div>

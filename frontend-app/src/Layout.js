@@ -23,8 +23,8 @@ const Layout = ({children, path}) => {
             <Breadcrumb path={path} />
             {children}
         </div>
-        <div className="p-3" style={{ background: '#0C1F18', color: 'white' }}>
-            Ivy S. So, Barbara K. Haya, Micah Elias. (2023, December). Voluntary Registry Offsets Database, Berkeley Carbon Trading Project, University of California, Berkeley
+        <div className="p-3" style={{ background: '#163026', color: 'white' }}>
+            Source: Ivy S. So, Barbara K. Haya, Micah Elias. (2023, December). Voluntary Registry Offsets Database, Berkeley Carbon Trading Project, University of California, Berkeley
         </div>
     </div>
   );
