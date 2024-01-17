@@ -57,14 +57,14 @@ const DetailsPane = ({ selectedItem, isOpen, onClose }) => {
 function ListPage() {
   const [items, setItems] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(14);
+  const [pageSize, setPageSize] = useState(20);
   const [selectedItem, setSelectedItem] = useState(null);
   const [isDetailsPaneOpen, setIsDetailsPaneOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [totalPages, setTotalPages] = useState(0);
 
   const navigate = useNavigate();
-  const maxPagesToShow = 18;
+  const maxPagesToShow = 20;
 
   useEffect(() => {
     const fetchItems = async () => {
