@@ -1,76 +1,75 @@
 // pages/api/hello.js
 import { sql } from '@vercel/postgres';
 
-const  getBooks = async (req, res) => {
+const  getSamsoOffsets = async (req, res) => {
+
+    console.log("SAMSO OFFSETS")
 
     if (req.method === 'GET') {
+        console.log("GET")
         const { page = 1, pageSize = 10, search = '' } = req.query;
         const offset = (page - 1) * pageSize;
 
         try {
             const result = await sql`
-                SELECT b.id, b.type, b.entity, b.lei, b.base, b.target, b.latest, b.status, COUNT(p.id) AS offset_projects
-                FROM samso_books b
-                LEFT JOIN samso_offset_projects p ON b.id = p.book_id
-                WHERE "entity" ILIKE ${`%${search}%`}
-                GROUP BY b.id
+                SELECT id, *
+                FROM samso_offset_projects
+                WHERE "name" ILIKE ${`%${search}%`}
                 ORDER BY id
                 LIMIT ${pageSize}
                 OFFSET ${offset}
-
             `;
-
-//            SELECT
-//                b.id AS book_id,
-//                b.entity as entity,
-//                COUNT(p.id) AS project_count
-//            FROM
-//                samso_books b
-//            LEFT JOIN
-//                samso_offset_projects p ON b.id = p.book_id
-//            GROUP BY
-//                b.id;
 
             const totalCount = await sql`
                 SELECT COUNT(*)
-                FROM samso_books
-                WHERE "entity" ILIKE ${`%${search}%`}
+                FROM samso_offset_projects
+                WHERE "name" ILIKE ${`%${search}%`}
             `;
 
             res.setHeader('X-Total-Count', totalCount.rows[0].count);
             res.json(result.rows);
         } catch (error) {
-            console.error('Error fetching items', error);
+            console.error('Error fetching samso offset projects items', error);
             res.status(500).json({ error: 'Internal server error' });
         }
     } else if (req.method === 'POST') {
+        console.log("POST")
+
         try {
             // Extract data from the request body
             const {
-              entity,
+              name,
+              reference,
+              status,
+              available_credits,
+              registry,
               type,
-              parent,
-              lei,
-              baseyear,
-              targetyear
+              methodology,
+              region,
+              developer,
+              book_id,
             } = req.body;
+
+            console.log(req.body)
+            console.log("req.body")
 
             // Perform the PostgreSQL insertion
             const result = await sql`
-                INSERT INTO samso_books (entity, type, parent, lei, base, target)
-                VALUES (${entity}, ${type}, ${parent}, ${lei}, ${baseyear}, ${targetyear}) RETURNING *
+                INSERT INTO samso_offset_projects (name, reference, status, available_credits, registry, type, methodology, region, developer, book_id)
+                VALUES (${name}, ${reference}, ${status}, ${available_credits}, ${registry}, ${type}, ${methodology}, ${region}, ${developer}, ${book_id}) RETURNING *
             `;
 
             // Respond with the inserted item
             res.json(result.rows[0]);
         } catch (error) {
-            console.error('Error inserting book:', error);
+            console.error('Error inserting offset project:', error);
             res.status(500).json({ error: 'Internal Server Error' });
         }
     } else if (req.method === 'OPTIONS') {
-        res.status(200).end();
-        return;
+      res.status(200).end();
+      return;
     }
+
 };
 
 const handleErrors = (e, res) => {
@@ -86,5 +85,5 @@ const handleErrors = (e, res) => {
 
 // Default export that calls one of the named exports
 export default async (req, res) => {
-    await getBooks(req, res);
+    await getSamsoOffsets(req, res);
 };

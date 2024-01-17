@@ -15,7 +15,7 @@ services:
 
   backend:
     build:
-      context: ./server-nodejs
+      context: ./backend
     container_name: backend-container
     environment:
       PGUSER: user
@@ -24,22 +24,20 @@ services:
       PGPASSWORD: password
       PGPORT: 5432
     ports:
-      - "5000:5000"
-    depends_on:
-      - postgres
+      - "3000:3000"  # Change the host port if needed
     networks:
       - app-network
 
-  frontend:
-    build:
-      context: ./frontend-app
-    container_name: frontend-container
-    ports:
-      - "3000:3000"
-    depends_on:
-      - backend
-    networks:
-      - app-network
+#  frontend:
+#    build:
+#      context: ./frontend-app
+#    container_name: frontend-container
+#    ports:
+#      - "3000:3000"
+#    depends_on:
+#      - backend
+#    networks:
+#      - app-network
 
 networks:
   app-network:

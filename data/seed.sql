@@ -158,5 +158,65 @@ CREATE TABLE RegistryOffsetProjects (
     FirstIssuanceYearNoHardCodeHide VARCHAR(20)
 );
 
+CREATE TABLE emissions (
+    id SERIAL PRIMARY KEY,
+    book_id VARCHAR(20), -- Adjust the data type and size as needed
+    LEI VARCHAR(20),
+    registered_name VARCHAR(255),
+    emission_source VARCHAR(255),
+    subsidiary_company_lei VARCHAR(20),
+    subsidiary_company_name VARCHAR(255),
+    country_of_emission VARCHAR(100),
+    state_or_province_of_emission VARCHAR(100),
+    location_of_emission VARCHAR(255),
+    postal_code_of_emission VARCHAR(20),
+    scope_of_emission VARCHAR(255),
+    emission_activity_type VARCHAR(255),
+    scope2_provider_legal_name VARCHAR(255),
+    scope2_provider_address VARCHAR(255),
+    scope2_provider_postal_code VARCHAR(20),
+    scope2_provider_lei VARCHAR(20),
+    scope3_supplier_legal_name VARCHAR(255),
+    scope3_supplier_address VARCHAR(255),
+    scope3_supplier_postal_code VARCHAR(20),
+    scope3_provider_lei VARCHAR(20)
+);
 
+
+CREATE TABLE emissions (
+    emission_id SERIAL PRIMARY KEY,
+    book_id INT REFERENCES samso_books(id),
+    category VARCHAR(50) NOT NULL,
+    activity VARCHAR(50) NOT NULL,
+    year INT NOT NULL
+    -- Add other emission-related columns as needed
+);
+
+CREATE TABLE samso_offset_projects (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255),
+    reference VARCHAR(255),
+    status VARCHAR(255),
+    available_credits INTEGER,
+    registry VARCHAR(255),
+    type VARCHAR(255),
+    methodology VARCHAR(255),
+    region VARCHAR(255),
+    developer VARCHAR(255),
+    book_id INT REFERENCES samso_books(id)
+);
+
+CREATE TABLE samso_books (
+    id SERIAL PRIMARY KEY,
+    entity VARCHAR(255),
+    lei VARCHAR(20),
+    base DECIMAL(10, 2),
+    target DECIMAL(10, 2),
+    latest DATE,
+    status VARCHAR(50),
+    emissions DECIMAL(10, 2),
+    offsets DECIMAL(10, 2),
+    securities DECIMAL(10, 2),
+    total_net DECIMAL(10, 2)
+);
 

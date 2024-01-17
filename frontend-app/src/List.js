@@ -172,7 +172,7 @@ function ListPage() {
           handleNextGroup={handleNextGroup}
           renderPaginationItems={renderPaginationItems}
           setCurrentPage={setCurrentPage}
-          path={['Home']} 
+          path={['Offset Projects']}
         >
         <div className="col-md-12">
             <Search onSearch={handleSearch} />

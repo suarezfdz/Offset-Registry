@@ -173,7 +173,7 @@ const Details = () => {
 
   return (
     <Layout
-        path={['Home', 'Details']}
+        path={['Offset Projects', 'Details']}
     >
       {item ? (
         <div className="container" style={{ 'color': 'white'  }}><h1 className="mb-4">{item["projectname"]}</h1>
