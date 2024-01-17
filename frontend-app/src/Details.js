@@ -204,11 +204,21 @@ const Details = () => {
                           "-"
                         )}
                   </p>
-                  <p><b>Project Website: </b>
-                  {item['projectwebsite'] != null ? (
-                     <a href={"http://"+item['projectwebsite']} target="_blank" rel="noopener noreferrer">
-                       {item['projectwebsite']}
-                     </a>
+                    <p>
+                      <b>Project Website: </b>
+                      {item['projectwebsite'] != null ? (
+                        <a
+                          href={
+                            item['projectwebsite'].startsWith('http') ||
+                            item['projectwebsite'].startsWith('https')
+                              ? item['projectwebsite']
+                              : 'http://' + item['projectwebsite']
+                          }
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {item['projectwebsite']}
+                        </a>
                       ) : (
                         "-"
                       )}
