@@ -182,14 +182,24 @@ CREATE TABLE emissions (
     scope3_provider_lei VARCHAR(20)
 );
 
+DROP TABLE emissions;
+DROP TABLE samso_offset_projects;
+DROP TABLE samso_books;
 
-CREATE TABLE emissions (
-    emission_id SERIAL PRIMARY KEY,
-    book_id INT REFERENCES samso_books(id),
-    category VARCHAR(50) NOT NULL,
-    activity VARCHAR(50) NOT NULL,
-    year INT NOT NULL
-    -- Add other emission-related columns as needed
+CREATE TABLE samso_books (
+    id SERIAL PRIMARY KEY,
+    entity VARCHAR(255),
+    lei VARCHAR(20),
+    base DECIMAL(10),
+    target DECIMAL(10),
+    latest DATE,
+    status VARCHAR(50),
+    emissions DECIMAL(10, 2),
+    offsets DECIMAL(10, 2),
+    securities DECIMAL(10, 2),
+    total_net DECIMAL(10, 2),
+    type VARCHAR(20),
+    parent DECIMAL(10)
 );
 
 CREATE TABLE samso_offset_projects (
@@ -206,17 +216,52 @@ CREATE TABLE samso_offset_projects (
     book_id INT REFERENCES samso_books(id)
 );
 
-CREATE TABLE samso_books (
-    id SERIAL PRIMARY KEY,
-    entity VARCHAR(255),
-    lei VARCHAR(20),
-    base DECIMAL(10, 2),
-    target DECIMAL(10, 2),
-    latest DATE,
-    status VARCHAR(50),
-    emissions DECIMAL(10, 2),
-    offsets DECIMAL(10, 2),
-    securities DECIMAL(10, 2),
-    total_net DECIMAL(10, 2)
+CREATE TABLE emissions (
+    emission_id SERIAL PRIMARY KEY,
+    book_id INT REFERENCES samso_books(id),
+    category VARCHAR(50) NOT NULL,
+    activity VARCHAR(50) NOT NULL,
+    year INT NOT NULL,
+    emission_value DECIMAL(10, 2)
 );
 
+
+INSERT INTO samso_books (entity, lei, base, target, latest, status, emissions, offsets, securities, total_net, type, parent)
+VALUES
+('State Street',        'LEI123456789', 2020, 2030, '2022-01-01', 'UN-VERIFIED', 0.0, 0.0, 0.0, 0.0, 'Parent',  NULL),
+('State Street IT',     'LEI123456789', 2020, 2030, '2022-01-01', 'UN-VERIFIED', 0.0, 0.0, 0.0, 0.0, 'Child',   1),
+('State Street UK',     'LEI123456789', 2020, 2030, '2022-01-01', 'UN-VERIFIED', 0.0, 0.0, 0.0, 0.0, 'Child',   1),
+('State Street ES',     'LEI123456789', 2020, 2030, '2022-01-01', 'UN-VERIFIED', 0.0, 0.0, 0.0, 0.0, 'Child',   1),
+('State Street GE',     'LEI123456789', 2020, 2030, '2022-01-01', 'UN-VERIFIED', 0.0, 0.0, 0.0, 0.0, 'Child',   1),
+('Apple',               'LEI123456789', 2020, 2030, '2022-01-01', 'UN-VERIFIED', 0.0, 0.0, 0.0, 0.0, 'Parent',  NULL),
+('Apple ES',            'LEI123456789', 2020, 2030, '2022-01-01', 'UN-VERIFIED', 0.0, 0.0, 0.0, 0.0, 'Child',   6),
+('Apple IT',            'LEI123456789', 2020, 2030, '2022-01-01', 'UN-VERIFIED', 0.0, 0.0, 0.0, 0.0, 'Child',   6),
+('Porsche',             'LEI123456789', 2020, 2030, '2022-01-01', 'UN-VERIFIED', 0.0, 0.0, 0.0, 0.0, 'Parent',   NULL),
+('Porsche IT',          'LEI123456789', 2020, 2030, '2022-01-01', 'UN-VERIFIED', 0.0, 0.0, 0.0, 0.0, 'Child',   9);
+
+
+INSERT INTO emissions (book_id, category, activity, year, emission_value)
+VALUES (1, 'Carbon', 'Production', 2022, 1.25);
+
+
+CREATE OR REPLACE FUNCTION update_emissions()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Update child samso_book's emissions
+    UPDATE samso_books
+    SET emissions = emissions + NEW.emission_value
+    WHERE id = NEW.book_id;
+
+    -- Update parent samso_book's emissions
+    UPDATE samso_books
+    SET emissions = emissions + NEW.emission_value
+    WHERE id = (SELECT parent FROM samso_books WHERE id = NEW.book_id);
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_update_emissions
+AFTER INSERT ON emissions
+FOR EACH ROW
+EXECUTE FUNCTION update_emissions();

@@ -13,20 +13,20 @@ services:
     networks:
       - app-network
 
-  backend:
-    build:
-      context: ./backend
-    container_name: backend-container
-    environment:
-      PGUSER: user
-      PGHOST: postgres
-      PGDATABASE: mydb
-      PGPASSWORD: password
-      PGPORT: 5432
-    ports:
-      - "3000:3000"  # Change the host port if needed
-    networks:
-      - app-network
+#  backend:
+#    build:
+#      context: ./backend
+#    container_name: backend-container
+#    environment:
+#      PGUSER: user
+#      PGHOST: postgres
+#      PGDATABASE: mydb
+#      PGPASSWORD: password
+#      PGPORT: 5432
+#    ports:
+#      - "3000:3000"  # Change the host port if needed
+#    networks:
+#      - app-network
 
 #  frontend:
 #    build:

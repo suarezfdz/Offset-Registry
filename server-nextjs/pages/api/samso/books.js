@@ -9,27 +9,13 @@ const  getBooks = async (req, res) => {
 
         try {
             const result = await sql`
-                SELECT b.id, b.type, b.entity, b.lei, b.base, b.target, b.latest, b.status, COUNT(p.id) AS offset_projects
+                SELECT *
                 FROM samso_books b
-                LEFT JOIN samso_offset_projects p ON b.id = p.book_id
                 WHERE "entity" ILIKE ${`%${search}%`}
-                GROUP BY b.id
                 ORDER BY id
                 LIMIT ${pageSize}
                 OFFSET ${offset}
-
             `;
-
-//            SELECT
-//                b.id AS book_id,
-//                b.entity as entity,
-//                COUNT(p.id) AS project_count
-//            FROM
-//                samso_books b
-//            LEFT JOIN
-//                samso_offset_projects p ON b.id = p.book_id
-//            GROUP BY
-//                b.id;
 
             const totalCount = await sql`
                 SELECT COUNT(*)
