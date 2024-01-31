@@ -6,7 +6,7 @@ const getBooksEmissionsByYearCategory = async (req, res) => {
 
   try {
     const result = await sql`
-      SELECT category, year, sum(emission_value) as emission_value
+      SELECT category, year, sum(emission_value)::numeric as emission_value
       FROM emissions
       WHERE book_id = ${book_id}
       GROUP BY category, year

@@ -158,29 +158,29 @@ CREATE TABLE RegistryOffsetProjects (
     FirstIssuanceYearNoHardCodeHide VARCHAR(20)
 );
 
-CREATE TABLE emissions (
-    id SERIAL PRIMARY KEY,
-    book_id VARCHAR(20), -- Adjust the data type and size as needed
-    LEI VARCHAR(20),
-    registered_name VARCHAR(255),
-    emission_source VARCHAR(255),
-    subsidiary_company_lei VARCHAR(20),
-    subsidiary_company_name VARCHAR(255),
-    country_of_emission VARCHAR(100),
-    state_or_province_of_emission VARCHAR(100),
-    location_of_emission VARCHAR(255),
-    postal_code_of_emission VARCHAR(20),
-    scope_of_emission VARCHAR(255),
-    emission_activity_type VARCHAR(255),
-    scope2_provider_legal_name VARCHAR(255),
-    scope2_provider_address VARCHAR(255),
-    scope2_provider_postal_code VARCHAR(20),
-    scope2_provider_lei VARCHAR(20),
-    scope3_supplier_legal_name VARCHAR(255),
-    scope3_supplier_address VARCHAR(255),
-    scope3_supplier_postal_code VARCHAR(20),
-    scope3_provider_lei VARCHAR(20)
-);
+--CREATE TABLE emissions (
+--    id SERIAL PRIMARY KEY,
+--    book_id VARCHAR(20), -- Adjust the data type and size as needed
+--    LEI VARCHAR(20),
+--    registered_name VARCHAR(255),
+--    emission_source VARCHAR(255),
+--    subsidiary_company_lei VARCHAR(20),
+--    subsidiary_company_name VARCHAR(255),
+--    country_of_emission VARCHAR(100),
+--    state_or_province_of_emission VARCHAR(100),
+--    location_of_emission VARCHAR(255),
+--    postal_code_of_emission VARCHAR(20),
+--    scope_of_emission VARCHAR(255),
+--    emission_activity_type VARCHAR(255),
+--    scope2_provider_legal_name VARCHAR(255),
+--    scope2_provider_address VARCHAR(255),
+--    scope2_provider_postal_code VARCHAR(20),
+--    scope2_provider_lei VARCHAR(20),
+--    scope3_supplier_legal_name VARCHAR(255),
+--    scope3_supplier_address VARCHAR(255),
+--    scope3_supplier_postal_code VARCHAR(20),
+--    scope3_provider_lei VARCHAR(20)
+--);
 
 DROP TABLE emissions;
 DROP TABLE samso_offset_projects;
@@ -263,77 +263,50 @@ AFTER INSERT ON emissions
 FOR EACH ROW
 EXECUTE FUNCTION update_emissions();
 
-
-INSERT INTO emissions (book_id, category, activity, year, emission_value)
-VALUES
-(2, 'Scope 1', 'Stationary', 2020, 6),
-(2, 'Scope 1', 'Mobile', 2020, 10),
-(2, 'Scope 1', 'Fugitive', 2020, 3),
-(2, 'Scope 1', 'Other', 2020, 3),
-;
-INSERT INTO emissions (book_id, category, activity, year, emission_value)
-VALUES (4, 'Scope 1', 'Production', 2022, 2.25);
-INSERT INTO emissions (book_id, category, activity, year, emission_value)
-VALUES (5, 'Scope 1', 'Production', 2022, 3.56);
-INSERT INTO emissions (book_id, category, activity, year, emission_value)
-VALUES (7, 'Scope 1', 'Production', 2022, 5.85);
-INSERT INTO emissions (book_id, category, activity, year, emission_value)
-VALUES (8, 'Scope 1', 'Production', 2022, 6.75);
-INSERT INTO emissions (book_id, category, activity, year, emission_value)
-VALUES (10, 'Scope 1', 'Production', 2022, 1.25);
-
-INSERT INTO emissions (book_id, category, activity, year, emission_value)
-VALUES
-(2, 'Scope 1', 'Production', 2020, 22),
-(2, 'Scope 2', 'Production', 2020, 12),
-(2, 'Scope 3', 'Production', 2020, 12)
-;
-
-
 INSERT INTO emissions (book_id, category, activity, year, emission_value)
 VALUES
   -- 2020
-  (1, 'Scope 1', 'Stationary', 2020, 6.00),
-  (1, 'Scope 1', 'Mobile', 2020, 10.00),
-  (1, 'Scope 1', 'Fugitive', 2020, 3.00),
-  (1, 'Scope 1', 'Other', 2020, 3.00),
+  (2, 'Scope 1', 'Stationary', 2020, 6.00),
+  (2, 'Scope 1', 'Mobile', 2020, 10.00),
+  (2, 'Scope 1', 'Fugitive', 2020, 3.00),
+  (2, 'Scope 1', 'Other', 2020, 3.00),
 
-  (1, 'Scope 2', 'Stationary', 2020, 6.00),
-  (1, 'Scope 2', 'Mobile', 2020, 2.00),
-  (1, 'Scope 2', 'Fugitive', 2020, 3.00),
-  (1, 'Scope 2', 'Other', 2020, 1.00),
+  (2, 'Scope 2', 'Stationary', 2020, 6.00),
+  (2, 'Scope 2', 'Mobile', 2020, 2.00),
+  (2, 'Scope 2', 'Fugitive', 2020, 3.00),
+  (2, 'Scope 2', 'Other', 2020, 1.00),
 
-  (1, 'Scope 3', 'Stationary', 2020, 3.00),
-  (1, 'Scope 3', 'Mobile', 2020, 4.00),
-  (1, 'Scope 3', 'Fugitive', 2020, 3.00),
-  (1, 'Scope 3', 'Other', 2020, 2.00),
+  (3, 'Scope 3', 'Stationary', 2020, 3.00),
+  (3, 'Scope 3', 'Mobile', 2020, 4.00),
+  (3, 'Scope 3', 'Fugitive', 2020, 3.00),
+  (3, 'Scope 3', 'Other', 2020, 2.00),
 
   -- 2021
-  (1, 'Scope 1', 'Stationary', 2021, 6.00),
-  (1, 'Scope 1', 'Mobile', 2021, 8.00),
-  (1, 'Scope 1', 'Fugitive', 2021, 3.00),
-  (1, 'Scope 1', 'Other', 2021, 3.00),
+  (2, 'Scope 1', 'Stationary', 2021, 6.00),
+  (2, 'Scope 1', 'Mobile', 2021, 8.00),
+  (2, 'Scope 1', 'Fugitive', 2021, 3.00),
+  (2, 'Scope 1', 'Other', 2021, 3.00),
 
-  (1, 'Scope 2', 'Stationary', 2021, 4.00),
-  (1, 'Scope 2', 'Mobile', 2021, 2.00),
-  (1, 'Scope 2', 'Fugitive', 2021, 3.00),
-  (1, 'Scope 2', 'Other', 2021, 1.00),
+  (4, 'Scope 2', 'Stationary', 2021, 4.00),
+  (4, 'Scope 2', 'Mobile', 2021, 2.00),
+  (4, 'Scope 2', 'Fugitive', 2021, 3.00),
+  (4, 'Scope 2', 'Other', 2021, 1.00),
 
-  (1, 'Scope 3', 'Stationary', 2021, 3.00),
-  (1, 'Scope 3', 'Mobile', 2021, 4.00),
-  (1, 'Scope 3', 'Fugitive', 2021, 3.00),
-  (1, 'Scope 3', 'Other', 2021, 2.00),
+  (2, 'Scope 3', 'Stationary', 2021, 3.00),
+  (2, 'Scope 3', 'Mobile', 2021, 4.00),
+  (2, 'Scope 3', 'Fugitive', 2021, 3.00),
+  (2, 'Scope 3', 'Other', 2021, 2.00),
 
   -- 2022
-  (1, 'Scope 1', 'Stationary', 2022, 6.00),
-  (1, 'Scope 1', 'Mobile', 2022, 7.00),
-  (1, 'Scope 1', 'Fugitive', 2022, 3.00),
-  (1, 'Scope 1', 'Other', 2022, 3.00),
+  (3, 'Scope 1', 'Stationary', 2022, 6.00),
+  (3, 'Scope 1', 'Mobile', 2022, 7.00),
+  (3, 'Scope 1', 'Fugitive', 2022, 3.00),
+  (3, 'Scope 1', 'Other', 2022, 3.00),
 
-  (1, 'Scope 2', 'Stationary', 2022, 1.00),
-  (1, 'Scope 2', 'Mobile', 2022, 3.00),
-  (1, 'Scope 2', 'Fugitive', 2022, 3.00),
-  (1, 'Scope 2', 'Other', 2022, 2.00);
+  (3, 'Scope 2', 'Stationary', 2022, 1.00),
+  (3, 'Scope 2', 'Mobile', 2022, 3.00),
+  (3, 'Scope 2', 'Fugitive', 2022, 3.00),
+  (3, 'Scope 2', 'Other', 2022, 2.00);
 
 -- Retrieves the emissions by category and year
 select category, year, sum(emission_value) from emissions group by category, year order by year, category;
