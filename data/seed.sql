@@ -240,9 +240,6 @@ VALUES
 ('Porsche IT',          'LEI123456789', 2020, 2030, '2022-01-01', 'UN-VERIFIED', 0.0, 0.0, 0.0, 0.0, 'Child',   9);
 
 
-INSERT INTO emissions (book_id, category, activity, year, emission_value)
-VALUES (1, 'Carbon', 'Production', 2022, 1.25);
-
 
 CREATE OR REPLACE FUNCTION update_emissions()
 RETURNS TRIGGER AS $$
@@ -265,3 +262,78 @@ CREATE TRIGGER trigger_update_emissions
 AFTER INSERT ON emissions
 FOR EACH ROW
 EXECUTE FUNCTION update_emissions();
+
+
+INSERT INTO emissions (book_id, category, activity, year, emission_value)
+VALUES
+(2, 'Scope 1', 'Stationary', 2020, 6),
+(2, 'Scope 1', 'Mobile', 2020, 10),
+(2, 'Scope 1', 'Fugitive', 2020, 3),
+(2, 'Scope 1', 'Other', 2020, 3),
+;
+INSERT INTO emissions (book_id, category, activity, year, emission_value)
+VALUES (4, 'Scope 1', 'Production', 2022, 2.25);
+INSERT INTO emissions (book_id, category, activity, year, emission_value)
+VALUES (5, 'Scope 1', 'Production', 2022, 3.56);
+INSERT INTO emissions (book_id, category, activity, year, emission_value)
+VALUES (7, 'Scope 1', 'Production', 2022, 5.85);
+INSERT INTO emissions (book_id, category, activity, year, emission_value)
+VALUES (8, 'Scope 1', 'Production', 2022, 6.75);
+INSERT INTO emissions (book_id, category, activity, year, emission_value)
+VALUES (10, 'Scope 1', 'Production', 2022, 1.25);
+
+INSERT INTO emissions (book_id, category, activity, year, emission_value)
+VALUES
+(2, 'Scope 1', 'Production', 2020, 22),
+(2, 'Scope 2', 'Production', 2020, 12),
+(2, 'Scope 3', 'Production', 2020, 12)
+;
+
+
+INSERT INTO emissions (book_id, category, activity, year, emission_value)
+VALUES
+  -- 2020
+  (1, 'Scope 1', 'Stationary', 2020, 6.00),
+  (1, 'Scope 1', 'Mobile', 2020, 10.00),
+  (1, 'Scope 1', 'Fugitive', 2020, 3.00),
+  (1, 'Scope 1', 'Other', 2020, 3.00),
+
+  (1, 'Scope 2', 'Stationary', 2020, 6.00),
+  (1, 'Scope 2', 'Mobile', 2020, 2.00),
+  (1, 'Scope 2', 'Fugitive', 2020, 3.00),
+  (1, 'Scope 2', 'Other', 2020, 1.00),
+
+  (1, 'Scope 3', 'Stationary', 2020, 3.00),
+  (1, 'Scope 3', 'Mobile', 2020, 4.00),
+  (1, 'Scope 3', 'Fugitive', 2020, 3.00),
+  (1, 'Scope 3', 'Other', 2020, 2.00),
+
+  -- 2021
+  (1, 'Scope 1', 'Stationary', 2021, 6.00),
+  (1, 'Scope 1', 'Mobile', 2021, 8.00),
+  (1, 'Scope 1', 'Fugitive', 2021, 3.00),
+  (1, 'Scope 1', 'Other', 2021, 3.00),
+
+  (1, 'Scope 2', 'Stationary', 2021, 4.00),
+  (1, 'Scope 2', 'Mobile', 2021, 2.00),
+  (1, 'Scope 2', 'Fugitive', 2021, 3.00),
+  (1, 'Scope 2', 'Other', 2021, 1.00),
+
+  (1, 'Scope 3', 'Stationary', 2021, 3.00),
+  (1, 'Scope 3', 'Mobile', 2021, 4.00),
+  (1, 'Scope 3', 'Fugitive', 2021, 3.00),
+  (1, 'Scope 3', 'Other', 2021, 2.00),
+
+  -- 2022
+  (1, 'Scope 1', 'Stationary', 2022, 6.00),
+  (1, 'Scope 1', 'Mobile', 2022, 7.00),
+  (1, 'Scope 1', 'Fugitive', 2022, 3.00),
+  (1, 'Scope 1', 'Other', 2022, 3.00),
+
+  (1, 'Scope 2', 'Stationary', 2022, 1.00),
+  (1, 'Scope 2', 'Mobile', 2022, 3.00),
+  (1, 'Scope 2', 'Fugitive', 2022, 3.00),
+  (1, 'Scope 2', 'Other', 2022, 2.00);
+
+-- Retrieves the emissions by category and year
+select category, year, sum(emission_value) from emissions group by category, year order by year, category;
