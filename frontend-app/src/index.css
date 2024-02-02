@@ -80,3 +80,7 @@ button.samso-button {
     border-color: #BAD172;
     color: #BAD172;
 }
+
+td {
+    padding: 2px;
+}

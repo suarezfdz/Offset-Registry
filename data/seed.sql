@@ -213,13 +213,15 @@ CREATE TABLE samso_offset_projects (
     methodology VARCHAR(255),
     region VARCHAR(255),
     developer VARCHAR(255),
+    category VARCHAR(50) NOT NULL,
+    year INT NOT NULL,
     book_id INT REFERENCES samso_books(id)
 );
 
 CREATE TABLE emissions (
     emission_id SERIAL PRIMARY KEY,
     book_id INT REFERENCES samso_books(id),
-    category VARCHAR(50) NOT NULL,
+    category INT NOT NULL,
     activity VARCHAR(50) NOT NULL,
     year INT NOT NULL,
     emission_value DECIMAL(10, 2)
@@ -228,16 +230,16 @@ CREATE TABLE emissions (
 
 INSERT INTO samso_books (entity, lei, base, target, latest, status, emissions, offsets, securities, total_net, type, parent)
 VALUES
-('State Street',        'LEI123456789', 2020, 2030, '2022-01-01', 'UN-VERIFIED', 0.0, 0.0, 0.0, 0.0, 'Parent',  NULL),
-('State Street IT',     'LEI123456789', 2020, 2030, '2022-01-01', 'UN-VERIFIED', 0.0, 0.0, 0.0, 0.0, 'Child',   1),
-('State Street UK',     'LEI123456789', 2020, 2030, '2022-01-01', 'UN-VERIFIED', 0.0, 0.0, 0.0, 0.0, 'Child',   1),
-('State Street ES',     'LEI123456789', 2020, 2030, '2022-01-01', 'UN-VERIFIED', 0.0, 0.0, 0.0, 0.0, 'Child',   1),
-('State Street GE',     'LEI123456789', 2020, 2030, '2022-01-01', 'UN-VERIFIED', 0.0, 0.0, 0.0, 0.0, 'Child',   1),
-('Apple',               'LEI123456789', 2020, 2030, '2022-01-01', 'UN-VERIFIED', 0.0, 0.0, 0.0, 0.0, 'Parent',  NULL),
-('Apple ES',            'LEI123456789', 2020, 2030, '2022-01-01', 'UN-VERIFIED', 0.0, 0.0, 0.0, 0.0, 'Child',   6),
-('Apple IT',            'LEI123456789', 2020, 2030, '2022-01-01', 'UN-VERIFIED', 0.0, 0.0, 0.0, 0.0, 'Child',   6),
-('Porsche',             'LEI123456789', 2020, 2030, '2022-01-01', 'UN-VERIFIED', 0.0, 0.0, 0.0, 0.0, 'Parent',   NULL),
-('Porsche IT',          'LEI123456789', 2020, 2030, '2022-01-01', 'UN-VERIFIED', 0.0, 0.0, 0.0, 0.0, 'Child',   9);
+('State Street',        'LEI123456789', 2010, 2030, '2022-01-01', 'PENDING VERIFICATION', 0.0, 0.0, 0.0, 0.0, 'Parent',  NULL),
+('State Street IT',     'LEI987654321', 2015, 2029, '2022-01-01', 'PENDING VERIFICATION', 0.0, 0.0, 0.0, 0.0, 'Child',   1),
+('State Street UK',     'LEI234567890', 2018, 2033, '2022-01-01', 'VERIFIED', 0.0, 0.0, 0.0, 0.0, 'Child',   1),
+('State Street ES',     'LEI098765432', 2012, 2028, '2022-01-01', 'PENDING VERIFICATION', 0.0, 0.0, 0.0, 0.0, 'Child',   1),
+('State Street GE',     'LEI567890123', 2016, 2025, '2022-01-01', 'UN-VERIFIED', 0.0, 0.0, 0.0, 0.0, 'Child',   1),
+('Apple',               'LEI345678901', 2010, 2030, '2022-01-01', 'PENDING VERIFICATION', 0.0, 0.0, 0.0, 0.0, 'Parent',  NULL),
+('Apple ES',            'LEI789012345', 2012, 2026, '2022-01-01', 'VERIFIED', 0.0, 0.0, 0.0, 0.0, 'Child',   6),
+('Apple IT',            'LEI210987654', 2015, 2025, '2022-01-01', 'UN-VERIFIED', 0.0, 0.0, 0.0, 0.0, 'Child',   6),
+('Porsche',             'LEI543210876', 2011, 2026, '2022-01-01', 'VERIFIED', 0.0, 0.0, 0.0, 0.0, 'Parent',   NULL),
+('Porsche IT',          'LEI678901234', 2020, 2030, '2022-01-01', 'VERIFIED', 0.0, 0.0, 0.0, 0.0, 'Child',   9);
 
 
 
@@ -263,50 +265,79 @@ AFTER INSERT ON emissions
 FOR EACH ROW
 EXECUTE FUNCTION update_emissions();
 
+
+CREATE OR REPLACE FUNCTION update_offset_projects()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Update child samso_book's emissions
+    UPDATE samso_books
+    SET offsets = offsets + 1
+    WHERE id = NEW.book_id;
+
+    -- Update parent samso_book's emissions
+    UPDATE samso_books
+    SET offsets = offsets + 1
+    WHERE id = (SELECT parent FROM samso_books WHERE id = NEW.book_id);
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_update_offsets
+AFTER INSERT ON samso_offset_projects
+FOR EACH ROW
+EXECUTE FUNCTION update_offset_projects();
+
 INSERT INTO emissions (book_id, category, activity, year, emission_value)
 VALUES
   -- 2020
-  (2, 'Scope 1', 'Stationary', 2020, 6.00),
-  (2, 'Scope 1', 'Mobile', 2020, 10.00),
-  (2, 'Scope 1', 'Fugitive', 2020, 3.00),
-  (2, 'Scope 1', 'Other', 2020, 3.00),
+  (2, 1, 'Stationary',  2020, 6.00),
+  (2, 1, 'Mobile',      2020, 10.00),
+  (2, 1, 'Fugitive',    2020, 3.00),
+  (2, 1, 'Other',       2020, 3.00),
 
-  (2, 'Scope 2', 'Stationary', 2020, 6.00),
-  (2, 'Scope 2', 'Mobile', 2020, 2.00),
-  (2, 'Scope 2', 'Fugitive', 2020, 3.00),
-  (2, 'Scope 2', 'Other', 2020, 1.00),
+  (2, 2, 'Stationary',  2020, 6.00),
+  (2, 2, 'Mobile',      2020, 2.00),
+  (2, 2, 'Fugitive',    2020, 3.00),
+  (2, 2, 'Other',       2020, 1.00),
 
-  (3, 'Scope 3', 'Stationary', 2020, 3.00),
-  (3, 'Scope 3', 'Mobile', 2020, 4.00),
-  (3, 'Scope 3', 'Fugitive', 2020, 3.00),
-  (3, 'Scope 3', 'Other', 2020, 2.00),
+  (3, 3, 'Stationary',  2020, 3.00),
+  (3, 3, 'Mobile',      2020, 4.00),
+  (3, 3, 'Fugitive',    2020, 3.00),
+  (3, 3, 'Other',       2020, 2.00),
 
   -- 2021
-  (2, 'Scope 1', 'Stationary', 2021, 6.00),
-  (2, 'Scope 1', 'Mobile', 2021, 8.00),
-  (2, 'Scope 1', 'Fugitive', 2021, 3.00),
-  (2, 'Scope 1', 'Other', 2021, 3.00),
+  (2, 1, 'Stationary',  2021, 6.00),
+  (2, 1, 'Mobile',      2021, 8.00),
+  (2, 1, 'Fugitive',    2021, 3.00),
+  (2, 1, 'Other',       2021, 3.00),
 
-  (4, 'Scope 2', 'Stationary', 2021, 4.00),
-  (4, 'Scope 2', 'Mobile', 2021, 2.00),
-  (4, 'Scope 2', 'Fugitive', 2021, 3.00),
-  (4, 'Scope 2', 'Other', 2021, 1.00),
+  (4, 2, 'Stationary',  2021, 4.00),
+  (4, 2, 'Mobile',      2021, 2.00),
+  (4, 2, 'Fugitive',    2021, 3.00),
+  (4, 2, 'Other',       2021, 1.00),
 
-  (2, 'Scope 3', 'Stationary', 2021, 3.00),
-  (2, 'Scope 3', 'Mobile', 2021, 4.00),
-  (2, 'Scope 3', 'Fugitive', 2021, 3.00),
-  (2, 'Scope 3', 'Other', 2021, 2.00),
+  (2, 3, 'Stationary',  2021, 3.00),
+  (2, 3, 'Mobile',      2021, 4.00),
+  (2, 3, 'Fugitive',    2021, 3.00),
+  (2, 3, 'Other',       2021, 2.00),
 
   -- 2022
-  (3, 'Scope 1', 'Stationary', 2022, 6.00),
-  (3, 'Scope 1', 'Mobile', 2022, 7.00),
-  (3, 'Scope 1', 'Fugitive', 2022, 3.00),
-  (3, 'Scope 1', 'Other', 2022, 3.00),
+  (3, 1, 'Stationary',  2022, 6.00),
+  (3, 1, 'Mobile',      2022, 7.00),
+  (3, 1, 'Fugitive',    2022, 3.00),
+  (3, 1, 'Other',       2022, 3.00),
 
-  (3, 'Scope 2', 'Stationary', 2022, 1.00),
-  (3, 'Scope 2', 'Mobile', 2022, 3.00),
-  (3, 'Scope 2', 'Fugitive', 2022, 3.00),
-  (3, 'Scope 2', 'Other', 2022, 2.00);
+  (3, 2, 'Stationary',  2022, 1.00),
+  (3, 2, 'Mobile',      2022, 3.00),
+  (3, 2, 'Fugitive',    2022, 3.00),
+  (3, 2, 'Other',       2022, 2.00);
 
 -- Retrieves the emissions by category and year
 select category, year, sum(emission_value) from emissions group by category, year order by year, category;
+
+
+INSERT INTO samso_offset_projects (name, reference, status, available_credits, registry, type, methodology, region, developer, book_id, category, year) VALUES
+    ('Advanced Refrigeration - ARS2021002', 'REF123', 'Active',   1000, 'RegistryA', 'TypeA', 'MethodologyA', 'RegionA', 'DeveloperA',    2, 'Offset MER', 2023),
+    ('Project2', 'REF456', 'Inactive',                            500,  'RegistryB', 'TypeB', 'MethodologyB', 'RegionB', 'DeveloperB',    2, 'Offset VER', 2022),
+    ('Project3', 'REF789', 'Active',                              750,  'RegistryC', 'TypeC', 'MethodologyC', 'RegionC', 'DeveloperC',    3, 'Offset VER', 2022);

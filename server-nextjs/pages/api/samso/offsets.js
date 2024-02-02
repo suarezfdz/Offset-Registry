@@ -48,6 +48,8 @@ const  getSamsoOffsets = async (req, res) => {
               region,
               developer,
               book_id,
+              category,
+              year,
             } = req.body;
 
             console.log(req.body)
@@ -55,8 +57,8 @@ const  getSamsoOffsets = async (req, res) => {
 
             // Perform the PostgreSQL insertion
             const result = await sql`
-                INSERT INTO samso_offset_projects (name, reference, status, available_credits, registry, type, methodology, region, developer, book_id)
-                VALUES (${name}, ${reference}, ${status}, ${available_credits}, ${registry}, ${type}, ${methodology}, ${region}, ${developer}, ${book_id}) RETURNING *
+                INSERT INTO samso_offset_projects (name, reference, status, available_credits, registry, type, methodology, region, developer, book_id, category, year)
+                VALUES (${name}, ${reference}, ${status}, ${available_credits}, ${registry}, ${type}, ${methodology}, ${region}, ${developer}, ${book_id}, ${category}, ${year}) RETURNING *
             `;
 
             // Respond with the inserted item
