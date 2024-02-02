@@ -10,7 +10,7 @@ const getBooksEmissionsByYearCategory = async (req, res) => {
       FROM emissions
       WHERE book_id = ${book_id}
       GROUP BY category, year
-      ORDER BY year, category;
+      ORDER BY category;
     `;
 
     if (result.rows.length == 0) {
