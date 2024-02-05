@@ -31,7 +31,6 @@ const postEmission = async (req, res) => {
           `;
         }
 
-
         // Respond with the inserted/updated item
         res.json(result.rows[0]);
       } catch (error) {
