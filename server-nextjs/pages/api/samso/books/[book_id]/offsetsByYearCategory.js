@@ -6,7 +6,7 @@ const getBooksOffsetProjectsByYearCategory = async (req, res) => {
 
   try {
     const result = await sql`
-      SELECT category, year, count(*)::int as offset_count
+      SELECT category, year, sum(available_credits)::int as offset_count
       FROM samso_offset_projects
       WHERE book_id = ${book_id}
       GROUP BY category, year

@@ -197,7 +197,6 @@ CREATE TABLE samso_books (
     emissions DECIMAL(10, 2),
     offsets DECIMAL(10, 2),
     securities DECIMAL(10, 2),
-    total_net DECIMAL(10, 2),
     type VARCHAR(20),
     parent DECIMAL(10)
 );
@@ -228,116 +227,290 @@ CREATE TABLE emissions (
 );
 
 
-INSERT INTO samso_books (entity, lei, base, target, latest, status, emissions, offsets, securities, total_net, type, parent)
+INSERT INTO samso_books (entity, lei, base, target, latest, status, emissions, offsets, securities, type, parent)
 VALUES
-('State Street',        'LEI123456789', 2010, 2030, '2022-01-01', 'PENDING VERIFICATION', 0.0, 0.0, 0.0, 0.0, 'Parent',  NULL),
-('State Street IT',     'LEI987654321', 2015, 2029, '2022-01-01', 'PENDING VERIFICATION', 0.0, 0.0, 0.0, 0.0, 'Child',   1),
-('State Street UK',     'LEI234567890', 2018, 2033, '2022-01-01', 'VERIFIED', 0.0, 0.0, 0.0, 0.0, 'Child',   1),
-('State Street ES',     'LEI098765432', 2012, 2028, '2022-01-01', 'PENDING VERIFICATION', 0.0, 0.0, 0.0, 0.0, 'Child',   1),
-('State Street GE',     'LEI567890123', 2016, 2025, '2022-01-01', 'UN-VERIFIED', 0.0, 0.0, 0.0, 0.0, 'Child',   1),
-('Apple',               'LEI345678901', 2010, 2030, '2022-01-01', 'PENDING VERIFICATION', 0.0, 0.0, 0.0, 0.0, 'Parent',  NULL),
-('Apple ES',            'LEI789012345', 2012, 2026, '2022-01-01', 'VERIFIED', 0.0, 0.0, 0.0, 0.0, 'Child',   6),
-('Apple IT',            'LEI210987654', 2015, 2025, '2022-01-01', 'UN-VERIFIED', 0.0, 0.0, 0.0, 0.0, 'Child',   6),
-('Porsche',             'LEI543210876', 2011, 2026, '2022-01-01', 'VERIFIED', 0.0, 0.0, 0.0, 0.0, 'Parent',   NULL),
-('Porsche IT',          'LEI678901234', 2020, 2030, '2022-01-01', 'VERIFIED', 0.0, 0.0, 0.0, 0.0, 'Child',   9);
+  ('State Street',        'LEI123456789', 2010, 2030, '2022-01-01', 'PENDING VERIFICATION', 0.0, 0.0, 0.0, 'Parent',  NULL),
+  ('State Street IT',     'LEI987654321', 2015, 2029, '2022-01-01', 'PENDING VERIFICATION', 0.0, 0.0, 0.0, 'Child',   1),
+  ('State Street UK',     'LEI234567890', 2018, 2033, '2022-01-01', 'VERIFIED', 0.0, 0.0, 0.0, 'Child',   1),
+  ('State Street ES',     'LEI098765432', 2012, 2028, '2022-01-01', 'PENDING VERIFICATION', 0.0, 0.0, 0.0, 'Child',   1),
+  ('State Street GE',     'LEI567890123', 2016, 2025, '2022-01-01', 'UN-VERIFIED', 0.0, 0.0, 0.0, 'Child',   1),
+  ('Apple',               'LEI345678901', 2010, 2030, '2022-01-01', 'PENDING VERIFICATION', 0.0, 0.0, 0.0, 'Parent',  NULL),
+  ('Apple ES',            'LEI789012345', 2012, 2026, '2022-01-01', 'VERIFIED', 0.0, 0.0, 0.0, 'Child',   6),
+  ('Apple IT',            'LEI210987654', 2015, 2025, '2022-01-01', 'UN-VERIFIED', 0.0, 0.0, 0.0, 'Child',   6),
+  ('Porsche',             'LEI543210876', 2011, 2026, '2022-01-01', 'VERIFIED', 0.0, 0.0, 0.0, 'Parent',   NULL),
+  ('Porsche IT',          'LEI678901234', 2020, 2030, '2022-01-01', 'VERIFIED', 0.0, 0.0, 0.0, 'Child',   9);
+
+-- =============================================================================
+
+-- Function to update emissions on create
+CREATE OR REPLACE FUNCTION update_emissions_on_create()
+  RETURNS TRIGGER AS $$
+  BEGIN
+      UPDATE samso_books
+      SET emissions = emissions + NEW.emission_value
+      WHERE id IN (NEW.book_id, (SELECT parent FROM samso_books WHERE id = NEW.book_id));
+
+      RETURN NEW;
+  END;
+  $$ LANGUAGE plpgsql;
+
+  -- Trigger for updating emissions on create
+  CREATE TRIGGER trigger_update_emissions_on_create
+  AFTER INSERT ON emissions
+  FOR EACH ROW
+  EXECUTE FUNCTION update_emissions_on_create();
+
+  -- Function to update emissions on update
+  CREATE OR REPLACE FUNCTION update_emissions_on_update()
+  RETURNS TRIGGER AS $$
+  BEGIN
+      UPDATE samso_books
+      SET emissions = emissions + NEW.emission_value - OLD.emission_value
+      WHERE id IN (NEW.book_id, (SELECT parent FROM samso_books WHERE id = NEW.book_id));
+
+      RETURN NEW;
+  END;
+  $$ LANGUAGE plpgsql;
+
+  -- Trigger for updating emissions on update
+  CREATE TRIGGER trigger_update_emissions_on_update
+  AFTER UPDATE ON emissions
+  FOR EACH ROW
+  EXECUTE FUNCTION update_emissions_on_update();
+
+  -- Function to update emissions on delete
+  CREATE OR REPLACE FUNCTION update_emissions_on_delete()
+  RETURNS TRIGGER AS $$
+  BEGIN
+      UPDATE samso_books
+      SET emissions = emissions - NEW.emission_value
+      WHERE id IN (NEW.book_id, (SELECT parent FROM samso_books WHERE id = NEW.book_id));
+
+      RETURN NEW;
+  END;
+  $$ LANGUAGE plpgsql;
+
+  -- Trigger for updating emissions on delete
+  CREATE TRIGGER trigger_update_emissions_on_delete
+  AFTER DELETE ON emissions
+  FOR EACH ROW
+  EXECUTE FUNCTION update_emissions_on_delete();
 
 
+-- =============================================================================
 
-CREATE OR REPLACE FUNCTION update_emissions()
-RETURNS TRIGGER AS $$
-BEGIN
-    -- Update child samso_book's emissions
-    UPDATE samso_books
-    SET emissions = emissions + NEW.emission_value
-    WHERE id = NEW.book_id;
+-- Function to update offsets on create
+CREATE OR REPLACE FUNCTION update_offset_projects_on_create()
+  RETURNS TRIGGER AS $$
+  BEGIN
+      UPDATE samso_books
+      SET offsets = offsets + NEW.available_credits
+      WHERE id IN (NEW.book_id, (SELECT parent FROM samso_books WHERE id = NEW.book_id));
 
-    -- Update parent samso_book's emissions
-    UPDATE samso_books
-    SET emissions = emissions + NEW.emission_value
-    WHERE id = (SELECT parent FROM samso_books WHERE id = NEW.book_id);
+      RETURN NEW;
+  END;
+  $$ LANGUAGE plpgsql;
 
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
+  -- Trigger for updating offsets on create
+  CREATE TRIGGER trigger_update_offsets_on_create
+  AFTER INSERT ON samso_offset_projects
+  FOR EACH ROW
+  EXECUTE FUNCTION update_offset_projects_on_create();
 
-CREATE TRIGGER trigger_update_emissions
-AFTER INSERT ON emissions
-FOR EACH ROW
-EXECUTE FUNCTION update_emissions();
+  -- Function to update offsets on update
+  CREATE OR REPLACE FUNCTION update_offset_projects_on_update()
+  RETURNS TRIGGER AS $$
+  BEGIN
+      UPDATE samso_books
+      SET offsets = offsets + NEW.available_credits - OLD.available_credits
+      WHERE id IN (NEW.book_id, (SELECT parent FROM samso_books WHERE id = NEW.book_id));
 
+      RETURN NEW;
+  END;
+  $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION update_offset_projects()
-RETURNS TRIGGER AS $$
-BEGIN
-    -- Update child samso_book's emissions
-    UPDATE samso_books
-    SET offsets = offsets + 1
-    WHERE id = NEW.book_id;
+  -- Trigger for updating offsets on update
+  CREATE TRIGGER trigger_update_offsets_on_update
+  AFTER UPDATE ON samso_offset_projects
+  FOR EACH ROW
+  EXECUTE FUNCTION update_offset_projects_on_update();
 
-    -- Update parent samso_book's emissions
-    UPDATE samso_books
-    SET offsets = offsets + 1
-    WHERE id = (SELECT parent FROM samso_books WHERE id = NEW.book_id);
+  -- Function to update offsets on delete
+  CREATE OR REPLACE FUNCTION update_offset_projects_on_delete()
+  RETURNS TRIGGER AS $$
+  BEGIN
+      UPDATE samso_books
+      SET offsets = offsets - NEW.available_credits
+      WHERE id IN (NEW.book_id, (SELECT parent FROM samso_books WHERE id = NEW.book_id));
 
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
+      RETURN NEW;
+  END;
+  $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER trigger_update_offsets
-AFTER INSERT ON samso_offset_projects
-FOR EACH ROW
-EXECUTE FUNCTION update_offset_projects();
+  -- Trigger for updating offsets on delete
+  CREATE TRIGGER trigger_update_offsets_on_delete
+  AFTER DELETE ON samso_offset_projects
+  FOR EACH ROW
+  EXECUTE FUNCTION update_offset_projects_on_delete();
+
+-- =============================================================================
 
 INSERT INTO emissions (book_id, category, activity, year, emission_value)
 VALUES
   -- 2020
-  (2, 1, 'Stationary',  2020, 6.00),
-  (2, 1, 'Mobile',      2020, 10.00),
-  (2, 1, 'Fugitive',    2020, 3.00),
-  (2, 1, 'Other',       2020, 3.00),
+  (2, 1, 'Stationary',  2020, 0.00),
+  (2, 1, 'Mobile',      2020, 0.00),
+  (2, 1, 'Fugitive',    2020, 0.00),
+  (2, 1, 'Other',       2020, 0.00),
 
-  (2, 2, 'Stationary',  2020, 6.00),
-  (2, 2, 'Mobile',      2020, 2.00),
-  (2, 2, 'Fugitive',    2020, 3.00),
-  (2, 2, 'Other',       2020, 1.00),
+  (2, 2, 'Purchased electricity - location based',  2020, 0.00),
+  (2, 2, 'Purchased electricity - market based',      2020, 0.00),
+  (2, 2, 'Purchased heat and steam',    2020, 0.00),
 
-  (3, 3, 'Stationary',  2020, 3.00),
-  (3, 3, 'Mobile',      2020, 4.00),
-  (3, 3, 'Fugitive',    2020, 3.00),
-  (3, 3, 'Other',       2020, 2.00),
+  (2, 3, 'Purchased goods and services',  2020, 0.00),
+  (2, 3, 'Capital goods',      2020, 0.00),
+  (2, 3, 'Fuel and energy related activities',    2020, 0.00),
+  (2, 3, 'Upstream transporation and distribution',       2020, 0.00),
+  (2, 3, 'Waste generated in operations',       2020, 0.00),
+  (2, 3, 'Business travel',       2020, 0.00),
+  (2, 3, 'Employee commuting',       2020, 0.00),
+  (2, 3, 'Upstream leased assets',       2020, 0.00),
+  (2, 3, 'Downstream transporation and distribution',       2020, 0.00),
+  (2, 3, 'Processing of sold products',       2020, 0.00),
+  (2, 3, 'Use of sold products',       2020, 0.00),
 
-  -- 2021
-  (2, 1, 'Stationary',  2021, 6.00),
-  (2, 1, 'Mobile',      2021, 8.00),
-  (2, 1, 'Fugitive',    2021, 3.00),
-  (2, 1, 'Other',       2021, 3.00),
+  (3, 1, 'Stationary',  2020, 0.00),
+  (3, 1, 'Mobile',      2020, 0.00),
+  (3, 1, 'Fugitive',    2020, 0.00),
+  (3, 1, 'Other',       2020, 0.00),
 
-  (4, 2, 'Stationary',  2021, 4.00),
-  (4, 2, 'Mobile',      2021, 2.00),
-  (4, 2, 'Fugitive',    2021, 3.00),
-  (4, 2, 'Other',       2021, 1.00),
+  (3, 2, 'Purchased electricity - location based',  2020, 0.00),
+  (3, 2, 'Purchased electricity - market based',      2020, 0.00),
+  (3, 2, 'Purchased heat and steam',    2020, 0.00),
 
-  (2, 3, 'Stationary',  2021, 3.00),
-  (2, 3, 'Mobile',      2021, 4.00),
-  (2, 3, 'Fugitive',    2021, 3.00),
-  (2, 3, 'Other',       2021, 2.00),
+  (3, 3, 'Purchased goods and services',  2020, 0.00),
+  (3, 3, 'Capital goods',      2020, 0.00),
+  (3, 3, 'Fuel and energy related activities',    2020, 0.00),
+  (3, 3, 'Upstream transporation and distribution',       2020, 0.00),
+  (3, 3, 'Waste generated in operations',       2020, 0.00),
+  (3, 3, 'Business travel',       2020, 0.00),
+  (3, 3, 'Employee commuting',       2020, 0.00),
+  (3, 3, 'Upstream leased assets',       2020, 0.00),
+  (3, 3, 'Downstream transporation and distribution',       2020, 0.00),
+  (3, 3, 'Processing of sold products',       2020, 0.00),
+  (3, 3, 'Use of sold products',       2020, 0.00),
 
-  -- 2022
-  (3, 1, 'Stationary',  2022, 6.00),
-  (3, 1, 'Mobile',      2022, 7.00),
-  (3, 1, 'Fugitive',    2022, 3.00),
-  (3, 1, 'Other',       2022, 3.00),
+  (4, 1, 'Stationary',  2020, 0.00),
+  (4, 1, 'Mobile',      2020, 0.00),
+  (4, 1, 'Fugitive',    2020, 0.00),
+  (4, 1, 'Other',       2020, 0.00),
 
-  (3, 2, 'Stationary',  2022, 1.00),
-  (3, 2, 'Mobile',      2022, 3.00),
-  (3, 2, 'Fugitive',    2022, 3.00),
-  (3, 2, 'Other',       2022, 2.00);
+  (4, 2, 'Purchased electricity - location based',  2020, 0.00),
+  (4, 2, 'Purchased electricity - market based',      2020, 0.00),
+  (4, 2, 'Purchased heat and steam',    2020, 0.00),
 
--- Retrieves the emissions by category and year
-select category, year, sum(emission_value) from emissions group by category, year order by year, category;
+  (4, 3, 'Purchased goods and services',  2020, 0.00),
+  (4, 3, 'Capital goods',      2020, 0.00),
+  (4, 3, 'Fuel and energy related activities',    2020, 0.00),
+  (4, 3, 'Upstream transporation and distribution',       2020, 0.00),
+  (4, 3, 'Waste generated in operations',       2020, 0.00),
+  (4, 3, 'Business travel',       2020, 0.00),
+  (4, 3, 'Employee commuting',       2020, 0.00),
+  (4, 3, 'Upstream leased assets',       2020, 0.00),
+  (4, 3, 'Downstream transporation and distribution',       2020, 0.00),
+  (4, 3, 'Processing of sold products',       2020, 0.00),
+  (4, 3, 'Use of sold products',       2020, 0.00),
+
+  (5, 1, 'Stationary',  2020, 0.00),
+  (5, 1, 'Mobile',      2020, 0.00),
+  (5, 1, 'Fugitive',    2020, 0.00),
+  (5, 1, 'Other',       2020, 0.00),
+
+  (5, 2, 'Purchased electricity - location based',  2020, 0.00),
+  (5, 2, 'Purchased electricity - market based',      2020, 0.00),
+  (5, 2, 'Purchased heat and steam',    2020, 0.00),
+
+  (5, 3, 'Purchased goods and services',  2020, 0.00),
+  (5, 3, 'Capital goods',      2020, 0.00),
+  (5, 3, 'Fuel and energy related activities',    2020, 0.00),
+  (5, 3, 'Upstream transporation and distribution',       2020, 0.00),
+  (5, 3, 'Waste generated in operations',       2020, 0.00),
+  (5, 3, 'Business travel',       2020, 0.00),
+  (5, 3, 'Employee commuting',       2020, 0.00),
+  (5, 3, 'Upstream leased assets',       2020, 0.00),
+  (5, 3, 'Downstream transporation and distribution',       2020, 0.00),
+  (5, 3, 'Processing of sold products',       2020, 0.00),
+  (5, 3, 'Use of sold products',       2020, 0.00),
+
+  (7, 1, 'Stationary',  2020, 0.00),
+  (7, 1, 'Mobile',      2020, 0.00),
+  (7, 1, 'Fugitive',    2020, 0.00),
+  (7, 1, 'Other',       2020, 0.00),
+
+  (7, 2, 'Purchased electricity - location based',  2020, 0.00),
+  (7, 2, 'Purchased electricity - market based',      2020, 0.00),
+  (7, 2, 'Purchased heat and steam',    2020, 0.00),
+
+  (7, 3, 'Purchased goods and services',  2020, 0.00),
+  (7, 3, 'Capital goods',      2020, 0.00),
+  (7, 3, 'Fuel and energy related activities',    2020, 0.00),
+  (7, 3, 'Upstream transporation and distribution',       2020, 0.00),
+  (7, 3, 'Waste generated in operations',       2020, 0.00),
+  (7, 3, 'Business travel',       2020, 0.00),
+  (7, 3, 'Employee commuting',       2020, 0.00),
+  (7, 3, 'Upstream leased assets',       2020, 0.00),
+  (7, 3, 'Downstream transporation and distribution',       2020, 0.00),
+  (7, 3, 'Processing of sold products',       2020, 0.00),
+  (7, 3, 'Use of sold products',       2020, 0.00),
+
+  (8, 1, 'Stationary',  2020, 0.00),
+  (8, 1, 'Mobile',      2020, 0.00),
+  (8, 1, 'Fugitive',    2020, 0.00),
+  (8, 1, 'Other',       2020, 0.00),
+
+  (8, 2, 'Purchased electricity - location based',  2020, 0.00),
+  (8, 2, 'Purchased electricity - market based',      2020, 0.00),
+  (8, 2, 'Purchased heat and steam',    2020, 0.00),
+
+  (8, 3, 'Purchased goods and services',  2020, 0.00),
+  (8, 3, 'Capital goods',      2020, 0.00),
+  (8, 3, 'Fuel and energy related activities',    2020, 0.00),
+  (8, 3, 'Upstream transporation and distribution',       2020, 0.00),
+  (8, 3, 'Waste generated in operations',       2020, 0.00),
+  (8, 3, 'Business travel',       2020, 0.00),
+  (8, 3, 'Employee commuting',       2020, 0.00),
+  (8, 3, 'Upstream leased assets',       2020, 0.00),
+  (8, 3, 'Downstream transporation and distribution',       2020, 0.00),
+  (8, 3, 'Processing of sold products',       2020, 0.00),
+  (8, 3, 'Use of sold products',       2020, 0.00),
+
+  (10, 1, 'Stationary',  2020, 0.00),
+  (10, 1, 'Mobile',      2020, 0.00),
+  (10, 1, 'Fugitive',    2020, 0.00),
+  (10, 1, 'Other',       2020, 0.00),
+
+  (10, 2, 'Purchased electricity - location based',  2020, 0.00),
+  (10, 2, 'Purchased electricity - market based',      2020, 0.00),
+  (10, 2, 'Purchased heat and steam',    2020, 0.00),
+
+  (10, 3, 'Purchased goods and services',  2020, 0.00),
+  (10, 3, 'Capital goods',      2020, 0.00),
+  (10, 3, 'Fuel and energy related activities',    2020, 0.00),
+  (10, 3, 'Upstream transporation and distribution',       2020, 0.00),
+  (10, 3, 'Waste generated in operations',       2020, 0.00),
+  (10, 3, 'Business travel',       2020, 0.00),
+  (10, 3, 'Employee commuting',       2020, 0.00),
+  (10, 3, 'Upstream leased assets',       2020, 0.00),
+  (10, 3, 'Downstream transporation and distribution',       2020, 0.00),
+  (10, 3, 'Processing of sold products',       2020, 0.00),
+  (10, 3, 'Use of sold products',       2020, 0.00)  ;
+
 
 
 INSERT INTO samso_offset_projects (name, reference, status, available_credits, registry, type, methodology, region, developer, book_id, category, year) VALUES
     ('Advanced Refrigeration - ARS2021002', 'REF123', 'Active',   1000, 'RegistryA', 'TypeA', 'MethodologyA', 'RegionA', 'DeveloperA',    2, 'Offset MER', 2023),
     ('Project2', 'REF456', 'Inactive',                            500,  'RegistryB', 'TypeB', 'MethodologyB', 'RegionB', 'DeveloperB',    2, 'Offset VER', 2022),
     ('Project3', 'REF789', 'Active',                              750,  'RegistryC', 'TypeC', 'MethodologyC', 'RegionC', 'DeveloperC',    3, 'Offset VER', 2022);
+
+    -- Retrieves the emissions by category and year
+    select category, year, sum(emission_value) from emissions group by category, year order by year, category;
